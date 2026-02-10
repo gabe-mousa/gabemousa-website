@@ -249,8 +249,61 @@ canvas {
     color: #2F5233;
     margin-bottom: 1rem;
     text-align: center;
-    padding-bottom: 0.5rem;
+    padding: 0.5rem;
     border-bottom: 2px solid #C2B280;
+    cursor: pointer !important;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.island-header:hover {
+    background: rgba(194, 178, 128, 0.2);
+    border-radius: 8px;
+}
+
+.header-text {
+    flex: 1;
+}
+
+.toggle-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.ocean-island-controls.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.ocean-island-controls.collapsed .header-text {
+    font-size: 0.9rem;
+}
+
+.ocean-island-controls.collapsed .header-text::before {
+    content: '🗺️ map controls';
+}
+
+.ocean-island-controls:not(.collapsed) .header-text::before {
+    content: '🏝️ ocean controls';
+}
+
+.ocean-island-controls.collapsed .island-header {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.controls-content {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 1;
+}
+
+.ocean-island-controls.collapsed .controls-content {
+    max-height: 0;
+    opacity: 0;
 }
 
 .control-group {

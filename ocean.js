@@ -12,6 +12,7 @@ class PixelOcean {
 
         // Animation control parameters
         this.pixelSize = 6; // Size of each "pixel" in the pixel art
+        this.animationSpeedMultiplier = 1; // Overall animation speed
         this.waveSpeedMultiplier = 1;
         this.fishSpeedMultiplier = 1;
         this.dolphinSpeedMultiplier = 1;
@@ -287,42 +288,45 @@ class PixelOcean {
         // Clamp depth
         depth = Math.max(0, Math.min(1, depth));
 
+        // Use animation speed to control pixel color variation (less variation = less blinking)
+        const colorVariation = this.animationSpeedMultiplier;
+
         // Color palette based on depth (from shallow to deep)
         if (depth < 0.15) {
             // Very shallow - light turquoise (sandbars, shallows)
-            const r = 85 + Math.floor(Math.random() * 25);
-            const g = 195 + Math.floor(Math.random() * 25);
-            const b = 220 + Math.floor(Math.random() * 20);
+            const r = 85 + Math.floor(Math.random() * 25 * colorVariation);
+            const g = 195 + Math.floor(Math.random() * 25 * colorVariation);
+            const b = 220 + Math.floor(Math.random() * 20 * colorVariation);
             return `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.3) {
             // Shallow water - bright blue
-            const r = 65 + Math.floor(Math.random() * 20);
-            const g = 170 + Math.floor(Math.random() * 25);
-            const b = 205 + Math.floor(Math.random() * 20);
+            const r = 65 + Math.floor(Math.random() * 20 * colorVariation);
+            const g = 170 + Math.floor(Math.random() * 25 * colorVariation);
+            const b = 205 + Math.floor(Math.random() * 20 * colorVariation);
             return `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.5) {
             // Medium shallow - medium blue
-            const r = 50 + Math.floor(Math.random() * 18);
-            const g = 145 + Math.floor(Math.random() * 20);
-            const b = 185 + Math.floor(Math.random() * 18);
+            const r = 50 + Math.floor(Math.random() * 18 * colorVariation);
+            const g = 145 + Math.floor(Math.random() * 20 * colorVariation);
+            const b = 185 + Math.floor(Math.random() * 18 * colorVariation);
             return `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.65) {
             // Medium depth - darker blue
-            const r = 38 + Math.floor(Math.random() * 15);
-            const g = 120 + Math.floor(Math.random() * 18);
-            const b = 165 + Math.floor(Math.random() * 15);
+            const r = 38 + Math.floor(Math.random() * 15 * colorVariation);
+            const g = 120 + Math.floor(Math.random() * 18 * colorVariation);
+            const b = 165 + Math.floor(Math.random() * 15 * colorVariation);
             return `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.8) {
             // Deep water - navy blue
-            const r = 28 + Math.floor(Math.random() * 12);
-            const g = 95 + Math.floor(Math.random() * 15);
-            const b = 145 + Math.floor(Math.random() * 12);
+            const r = 28 + Math.floor(Math.random() * 12 * colorVariation);
+            const g = 95 + Math.floor(Math.random() * 15 * colorVariation);
+            const b = 145 + Math.floor(Math.random() * 12 * colorVariation);
             return `rgb(${r}, ${g}, ${b})`;
         } else {
             // Very deep - darkest navy
-            const r = 18 + Math.floor(Math.random() * 10);
-            const g = 70 + Math.floor(Math.random() * 15);
-            const b = 120 + Math.floor(Math.random() * 15);
+            const r = 18 + Math.floor(Math.random() * 10 * colorVariation);
+            const g = 70 + Math.floor(Math.random() * 15 * colorVariation);
+            const b = 120 + Math.floor(Math.random() * 15 * colorVariation);
             return `rgb(${r}, ${g}, ${b})`;
         }
     }
@@ -581,6 +585,25 @@ class PixelOcean {
     setupControls() {
         // Wait for DOM to be ready
         const initControls = () => {
+            // Toggle panel open/close
+            const toggleBtn = document.getElementById('controls-toggle');
+            const controlsPanel = document.getElementById('ocean-controls');
+
+            if (toggleBtn && controlsPanel) {
+                toggleBtn.addEventListener('click', () => {
+                    controlsPanel.classList.toggle('collapsed');
+                });
+            }
+
+            // Animation speed control (affects frame rate)
+            const animationSpeedSlider = document.getElementById('animation-speed');
+            if (animationSpeedSlider) {
+                animationSpeedSlider.addEventListener('input', (e) => {
+                    this.animationSpeedMultiplier = parseFloat(e.target.value);
+                    e.target.nextElementSibling.textContent = `${this.animationSpeedMultiplier.toFixed(1)}x`;
+                });
+            }
+
             // Wave speed control
             const waveSpeedSlider = document.getElementById('wave-speed');
             if (waveSpeedSlider) {
