@@ -1,7 +1,8 @@
 // Blog posts configuration
 const blogPosts = [
     '1-starting-a-blog.md',
-    '2-how-to-fly-a-plane.md'
+    '2-how-to-fly-a-plane.md',
+    '3-search-for-meaning.md'
 ];
 
 // Parse markdown to extract title and preview
