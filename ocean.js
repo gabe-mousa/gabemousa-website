@@ -73,8 +73,8 @@ class PixelOcean {
             });
         }
 
-        // Generate fish shadows (swimming near surface)
-        const fishCount = Math.floor(30 + Math.random() * 40);
+        // Generate fish shadows (swimming near surface) - increased count
+        const fishCount = Math.floor(40 + Math.random() * 50);
         for (let i = 0; i < fishCount; i++) {
             this.features.push({
                 type: 'fish',
@@ -88,45 +88,8 @@ class PixelOcean {
             });
         }
 
-        // Generate coral reefs (visible through shallow water)
-        const reefCount = Math.floor(8 + Math.random() * 12);
-        for (let i = 0; i < reefCount; i++) {
-            this.features.push({
-                type: 'reef',
-                x: Math.random() * this.cols,
-                y: Math.random() * this.rows,
-                width: 5 + Math.floor(Math.random() * 8),
-                height: 5 + Math.floor(Math.random() * 8),
-                color: this.getRandomReefColor(),
-                pattern: this.generateReefPattern()
-            });
-        }
-
-        // Generate rocks
-        const rockCount = Math.floor(10 + Math.random() * 15);
-        for (let i = 0; i < rockCount; i++) {
-            this.features.push({
-                type: 'rock',
-                x: Math.random() * this.cols,
-                y: Math.random() * this.rows,
-                size: 1 + Math.floor(Math.random() * 3)
-            });
-        }
-
-        // Generate seaweed patches (visible from top)
-        const seaweedCount = Math.floor(12 + Math.random() * 20);
-        for (let i = 0; i < seaweedCount; i++) {
-            this.features.push({
-                type: 'seaweed',
-                x: Math.random() * this.cols,
-                y: Math.random() * this.rows,
-                size: 2 + Math.floor(Math.random() * 4),
-                phase: Math.random() * Math.PI * 2
-            });
-        }
-
-        // Generate dolphins/large fish
-        const dolphinCount = Math.floor(3 + Math.random() * 6);
+        // Generate dolphins/large fish - increased count
+        const dolphinCount = Math.floor(5 + Math.random() * 10);
         for (let i = 0; i < dolphinCount; i++) {
             this.features.push({
                 type: 'dolphin',
@@ -135,18 +98,6 @@ class PixelOcean {
                 angle: Math.random() * Math.PI * 2,
                 speed: 0.6 + Math.random() * 0.9,
                 phase: Math.random() * Math.PI * 2
-            });
-        }
-
-        // Generate kelp forests
-        const kelpCount = Math.floor(5 + Math.random() * 8);
-        for (let i = 0; i < kelpCount; i++) {
-            this.features.push({
-                type: 'kelp',
-                x: Math.random() * this.cols,
-                y: Math.random() * this.rows,
-                width: 4 + Math.floor(Math.random() * 6),
-                height: 4 + Math.floor(Math.random() * 6)
             });
         }
     }
@@ -243,25 +194,8 @@ class PixelOcean {
         return shape;
     }
 
-    generateReefPattern() {
-        const size = 5;
-        const pattern = [];
-        for (let i = 0; i < size; i++) {
-            pattern[i] = [];
-            for (let j = 0; j < size; j++) {
-                pattern[i][j] = Math.random() > 0.4;
-            }
-        }
-        return pattern;
-    }
-
     getRandomFishColor() {
         const colors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#FF8AAE', '#C77DFF'];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-
-    getRandomReefColor() {
-        const colors = ['#FF6B9D', '#C77DFF', '#FFA07A', '#FF8AAE', '#E76F51'];
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
@@ -375,23 +309,6 @@ class PixelOcean {
         this.drawPixel(x - Math.round(dy), y + Math.round(dx), 'rgba(50, 50, 80, 0.4)');
     }
 
-    drawReef(reef) {
-        const x = Math.floor(reef.x);
-        const y = Math.floor(reef.y);
-
-        // Draw coral reef from top-down (colorful patches)
-        for (let i = 0; i < reef.width; i++) {
-            for (let j = 0; j < reef.height; j++) {
-                if (reef.pattern[Math.min(i, reef.pattern.length - 1)][Math.min(j, reef.pattern[0].length - 1)]) {
-                    const brightness = Math.random() * 30 - 15;
-                    const alpha = 0.5 + Math.random() * 0.3;
-                    const color = this.adjustBrightness(reef.color, brightness);
-                    this.drawPixel(x + i, y + j, color.replace('rgb', 'rgba').replace(')', `, ${alpha})`));
-                }
-            }
-        }
-    }
-
     drawIsland(island) {
         const x = Math.floor(island.x);
         const y = Math.floor(island.y);
@@ -431,53 +348,6 @@ class PixelOcean {
             return shape[i][j];
         }
         return shape[i][j] && (!shape[i-1][j] || !shape[i+1][j] || !shape[i][j-1] || !shape[i][j+1]);
-    }
-
-    drawSeaweed(seaweed) {
-        // Top-down view: seaweed patch
-        const x = Math.floor(seaweed.x);
-        const y = Math.floor(seaweed.y);
-        const sway = Math.sin(this.time * 1.5 + seaweed.phase) * 0.5;
-
-        for (let i = 0; i < seaweed.size; i++) {
-            for (let j = 0; j < seaweed.size; j++) {
-                if (Math.random() > 0.4) {
-                    const green = 90 + Math.floor(Math.random() * 40);
-                    const offset = Math.floor(sway * (i % 2 === 0 ? 1 : -1));
-                    this.drawPixel(x + i + offset, y + j, `rgba(30, ${green}, 50, 0.6)`);
-                }
-            }
-        }
-    }
-
-    drawRock(rock) {
-        // Top-down view: rocks/stones
-        const x = Math.floor(rock.x);
-        const y = Math.floor(rock.y);
-
-        for (let i = 0; i < rock.size; i++) {
-            for (let j = 0; j < rock.size; j++) {
-                if (i + j < rock.size + 1) {
-                    const gray = 80 + Math.floor(Math.random() * 30);
-                    this.drawPixel(x + i, y + j, `rgb(${gray}, ${gray}, ${gray + 10})`);
-                }
-            }
-        }
-    }
-
-    drawKelp(kelp) {
-        // Top-down view: kelp forest (darker green patches)
-        const x = Math.floor(kelp.x);
-        const y = Math.floor(kelp.y);
-
-        for (let i = 0; i < kelp.width; i++) {
-            for (let j = 0; j < kelp.height; j++) {
-                if (Math.random() > 0.3) {
-                    const green = 70 + Math.floor(Math.random() * 30);
-                    this.drawPixel(x + i, y + j, `rgba(20, ${green}, 40, 0.5)`);
-                }
-            }
-        }
     }
 
     drawSailboat() {
@@ -684,14 +554,8 @@ class PixelOcean {
         // Update moving features
         this.updateFeatures();
 
-        // Draw features in layers (bottom to top in water column)
-        // Deep features first
-        this.features.filter(f => f.type === 'kelp').forEach(f => this.drawKelp(f));
-        this.features.filter(f => f.type === 'reef').forEach(f => this.drawReef(f));
-        this.features.filter(f => f.type === 'rock').forEach(f => this.drawRock(f));
-        this.features.filter(f => f.type === 'seaweed').forEach(f => this.drawSeaweed(f));
-
-        // Islands (on surface)
+        // Draw features in layers (bottom to top)
+        // Islands first (on ocean floor/surface)
         this.features.filter(f => f.type === 'island').forEach(f => this.drawIsland(f));
 
         // Swimming creatures
