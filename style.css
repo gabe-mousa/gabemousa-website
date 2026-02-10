@@ -7,9 +7,12 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     text-transform: lowercase;
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    background: #2a5f7f;
     color: #333;
     line-height: 1.6;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none; /* Hide default cursor since sailboat follows it */
 }
 
 html {
@@ -20,27 +23,40 @@ nav {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
     padding: 1rem 2rem;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer; /* Show cursor on nav */
+}
+
+.nav-name {
+    color: #e5a8ba;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.nav-links {
     display: flex;
     gap: 2rem;
-    justify-content: center;
 }
 
 nav a {
-    color: #ff6b9d;
+    color: #e5a8ba;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 300;
     transition: all 0.3s ease;
     padding: 0.5rem 1rem;
     border-radius: 20px;
+    cursor: pointer;
 }
 
 nav a:hover {
-    background: #fff0f6;
+    background: #fef0f5;
     transform: translateY(-2px);
 }
 
@@ -55,30 +71,36 @@ section {
 .content {
     max-width: 800px;
     width: 100%;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 3rem;
     border-radius: 30px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    cursor: auto; /* Show cursor over content */
 }
 
 h1 {
     font-size: 3rem;
-    color: #ff6b9d;
+    color: #e5a8ba;
     margin-bottom: 1rem;
+    font-weight: 300;
 }
 
 h2 {
     font-size: 2rem;
-    color: #ff6b9d;
+    color: #e5a8ba;
     margin-bottom: 1.5rem;
-    border-bottom: 3px solid #ffecd2;
+    border-bottom: 3px solid #fce4ec;
     padding-bottom: 0.5rem;
+    font-weight: 300;
 }
 
 h3 {
     font-size: 1.3rem;
-    color: #ff8fab;
+    color: #e5a8ba;
     margin-bottom: 0.3rem;
+    font-weight: 300;
 }
 
 p {
@@ -86,29 +108,9 @@ p {
     color: #666;
 }
 
-#home {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
 #home .content {
     text-align: center;
     background: rgba(255, 255, 255, 0.95);
-}
-
-#blog {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-#life {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-#resume {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-#ideas {
-    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
 }
 
 .blog-posts {
@@ -119,15 +121,15 @@ p {
 
 .post {
     padding: 1.5rem;
-    background: #fff9fc;
+    background: #fef9fb;
     border-radius: 15px;
-    border-left: 4px solid #ff6b9d;
+    border-left: 4px solid #e5a8ba;
     transition: all 0.3s ease;
 }
 
 .post:hover {
     transform: translateX(5px);
-    box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
+    box-shadow: 0 5px 15px rgba(229, 168, 186, 0.2);
 }
 
 .date {
@@ -148,11 +150,11 @@ p {
 .show-more {
     margin-top: 1rem;
     padding: 0.8rem 2rem;
-    background: #ff6b9d;
+    background: #e5a8ba;
     color: white;
     border: none;
     border-radius: 25px;
-    cursor: pointer;
+    cursor: pointer !important;
     font-size: 1rem;
     text-transform: lowercase;
     transition: all 0.3s ease;
@@ -160,7 +162,7 @@ p {
 }
 
 .show-more:hover {
-    background: #ff8fab;
+    background: #f0b9ca;
     transform: scale(1.02);
 }
 
@@ -178,18 +180,19 @@ li {
     display: inline-block;
     margin-top: 1rem;
     padding: 1rem 2rem;
-    background: #43e97b;
+    background: #b8dcc8;
     color: white;
     text-decoration: none;
     border-radius: 25px;
     transition: all 0.3s ease;
-    font-weight: 500;
+    font-weight: 300;
+    cursor: pointer !important;
 }
 
 .resume-link:hover {
-    background: #38f9d7;
+    background: #a8d1b8;
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);
+    box-shadow: 0 5px 15px rgba(184, 220, 200, 0.4);
 }
 
 .idea-grid {
@@ -201,7 +204,7 @@ li {
 
 .idea-card {
     padding: 2rem 1rem;
-    background: #fff9fc;
+    background: #fef9fb;
     border-radius: 15px;
     text-align: center;
     transition: all 0.3s ease;
@@ -210,14 +213,33 @@ li {
 
 .idea-card:hover {
     transform: translateY(-5px);
-    border-color: #fa709a;
-    box-shadow: 0 5px 20px rgba(250, 112, 154, 0.2);
+    border-color: #e5a8ba;
+    box-shadow: 0 5px 20px rgba(229, 168, 186, 0.2);
+}
+
+/* Ensure interactive elements show cursor */
+button, a, input, textarea, select {
+    cursor: pointer !important;
+}
+
+/* Canvas for pixel ocean */
+canvas {
+    display: block;
 }
 
 @media (max-width: 768px) {
     nav {
-        gap: 1rem;
         padding: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nav-name {
+        font-size: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
     }
 
     nav a {
