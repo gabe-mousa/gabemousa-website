@@ -51,8 +51,8 @@ function parseMarkdown(markdown) {
         const line = lines[i];
         if (!line.startsWith('#') && !line.startsWith('*') && !line.startsWith('-') && !line.startsWith('**') && line.length > 10) {
             preview = line.trim();
-            if (preview.length > 150) {
-                preview = preview.substring(0, 150) + '...';
+            if (preview.length > 200) {
+                preview = preview.substring(0, 200) + '...';
             }
             break;
         }
@@ -61,16 +61,17 @@ function parseMarkdown(markdown) {
     return { title, date, preview };
 }
 
-// Load and display blog posts
-async function loadBlogPosts() {
-    const container = document.getElementById('blog-posts-container');
+// Load and display all blog posts
+async function loadAllBlogPosts() {
+    const container = document.getElementById('blog-list');
+    const countElement = document.getElementById('post-count');
 
     if (!container) {
-        console.error('Blog posts container not found');
+        console.error('Blog list container not found');
         return;
     }
 
-    console.log('Loading blog posts...');
+    console.log('Loading all blog posts...');
 
     try {
         // Discover blog posts automatically
@@ -113,16 +114,19 @@ async function loadBlogPosts() {
             return numB - numA;
         });
 
-        // Display only the 5 most recent posts on homepage
-        const recentPosts = posts.slice(0, 5);
+        // Update post count
+        if (countElement) {
+            countElement.textContent = `${posts.length} post${posts.length !== 1 ? 's' : ''} total`;
+        }
 
-        recentPosts.forEach(post => {
-            const article = document.createElement('article');
-            article.className = 'post';
-            article.style.cursor = 'pointer';
-            article.onclick = () => {
-                window.location.href = `post.html?post=${post.filename}`;
-            };
+        // Display all posts
+        container.className = 'blog-list';
+        container.innerHTML = '';
+
+        posts.forEach(post => {
+            const item = document.createElement('a');
+            item.className = 'blog-list-item';
+            item.href = `post.html?post=${post.filename}`;
 
             const h3 = document.createElement('h3');
             h3.textContent = post.title;
@@ -132,24 +136,27 @@ async function loadBlogPosts() {
             dateSpan.textContent = post.date || 'no date';
 
             const p = document.createElement('p');
+            p.className = 'preview';
             p.textContent = post.preview || 'No preview available.';
 
-            article.appendChild(h3);
-            article.appendChild(dateSpan);
-            article.appendChild(p);
+            item.appendChild(h3);
+            item.appendChild(dateSpan);
+            item.appendChild(p);
 
-            container.appendChild(article);
+            container.appendChild(item);
         });
 
         if (posts.length === 0) {
+            container.className = 'error';
             container.innerHTML = '<p>No blog posts available yet. Make sure you\'re running a local server.</p>';
         }
 
     } catch (err) {
         console.error('Error loading blog posts:', err);
+        container.className = 'error';
         container.innerHTML = '<p>Error loading blog posts. Check console for details.</p>';
     }
 }
 
 // Load posts when page loads
-document.addEventListener('DOMContentLoaded', loadBlogPosts);
+document.addEventListener('DOMContentLoaded', loadAllBlogPosts);

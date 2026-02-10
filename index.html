@@ -66,14 +66,17 @@
         <div class="content">
             <h1>hi, i'm gabe</h1>
             <p>welcome to my little corner of the internet</p>
-            <p>i'm a software engineer at microsoft studying ai safety in my freetime</p>
+            <p>i'm a software engineer based in seattle, wa working at microsoft studying ai safety in my freetime</p>
             <p>if you want to contact me - gab.01@hotmail.com</p>
         </div>
     </section>
 
     <section id="blog">
         <div class="content">
-            <h2>blog</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin: 0;">blog</h2>
+                <a href="blog-list.html" class="see-all-button">see all blog posts →</a>
+            </div>
             <div class="blog-posts" id="blog-posts-container">
                 <!-- Blog posts will be loaded dynamically -->
             </div>
@@ -111,15 +114,19 @@
             <h2>ideas</h2>
             <p>random thoughts and projects i'm thinking about</p>
             <div class="idea-grid">
-                <div class="idea-card">build something cool</div>
-                <div class="idea-card">learn a new skill</div>
-                <div class="idea-card">creative project</div>
-                <div class="idea-card">travel somewhere new</div>
+                <div class="idea-card">subset of model weights unique to inference layer, to allow for model adaptability</div>
+                <div class="idea-card">deception llm evals</div>
+                <div class="idea-card">sailing the Race To Alaska</div>
+                <div class="idea-card">building beneficial evals for llms *credit to adam jones*</div>
+                <div class="idea-card">programming language for llms thats highly optimized</div>
+                <div class="idea-card">generating synthetic data using llms as a judge with a set of evals for new data before acceptance</div>
+                <div class="idea-card">security screener for new ai projects to make startup simpler and safer</div>
             </div>
         </div>
     </section>
 
     <script src="ocean.js"></script>
+    <script src="analytics.js"></script>
     <script src="script.js"></script>
     <script src="blog.js"></script>
 </body>
