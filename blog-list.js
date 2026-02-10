@@ -53,8 +53,9 @@ function parseMarkdown(markdown) {
         title = lines[0].replace(/^#\s*/, '').trim();
     }
 
-    // Extract date (look for *Published:* or similar)
-    const dateMatch = markdown.match(/\*Published:\s*([^*]+)\*/i);
+    // Extract date (look for *Published:* or *Date:* or just the last line with asterisks)
+    const dateMatch = markdown.match(/\*Published:\s*([^*]+)\*/i) ||
+                     markdown.match(/\*([A-Za-z].*\d{4})\*/);
     if (dateMatch) {
         date = dateMatch[1].trim();
     }
