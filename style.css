@@ -1,0 +1,243 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    text-transform: lowercase;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    color: #333;
+    line-height: 1.6;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+}
+
+nav a {
+    color: #ff6b9d;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+nav a:hover {
+    background: #fff0f6;
+    transform: translateY(-2px);
+}
+
+section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+}
+
+.content {
+    max-width: 800px;
+    width: 100%;
+    background: white;
+    padding: 3rem;
+    border-radius: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 3rem;
+    color: #ff6b9d;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 2rem;
+    color: #ff6b9d;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid #ffecd2;
+    padding-bottom: 0.5rem;
+}
+
+h3 {
+    font-size: 1.3rem;
+    color: #ff8fab;
+    margin-bottom: 0.3rem;
+}
+
+p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+#home {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+#home .content {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+#blog {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+#life {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+#resume {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+#ideas {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.blog-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.post {
+    padding: 1.5rem;
+    background: #fff9fc;
+    border-radius: 15px;
+    border-left: 4px solid #ff6b9d;
+    transition: all 0.3s ease;
+}
+
+.post:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
+}
+
+.date {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.older-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.older-posts.hidden {
+    display: none;
+}
+
+.show-more {
+    margin-top: 1rem;
+    padding: 0.8rem 2rem;
+    background: #ff6b9d;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: lowercase;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.show-more:hover {
+    background: #ff8fab;
+    transform: scale(1.02);
+}
+
+ul {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+li {
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.resume-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    background: #43e97b;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.resume-link:hover {
+    background: #38f9d7;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);
+}
+
+.idea-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.idea-card {
+    padding: 2rem 1rem;
+    background: #fff9fc;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.idea-card:hover {
+    transform: translateY(-5px);
+    border-color: #fa709a;
+    box-shadow: 0 5px 20px rgba(250, 112, 154, 0.2);
+}
+
+@media (max-width: 768px) {
+    nav {
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    nav a {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .content {
+        padding: 2rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .idea-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

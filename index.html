@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>your name</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="#home">home</a>
+        <a href="#blog">blog</a>
+        <a href="#life">life</a>
+        <a href="#resume">resume</a>
+        <a href="#ideas">ideas</a>
+    </nav>
+
+    <section id="home">
+        <div class="content">
+            <h1>hey there! ✨</h1>
+            <p>welcome to my little corner of the internet</p>
+        </div>
+    </section>
+
+    <section id="blog">
+        <div class="content">
+            <h2>blog</h2>
+            <div class="blog-posts">
+                <article class="post">
+                    <h3>post title one</h3>
+                    <span class="date">january 2026</span>
+                    <p>this is a preview of your latest blog post...</p>
+                </article>
+                <article class="post">
+                    <h3>post title two</h3>
+                    <span class="date">december 2025</span>
+                    <p>another interesting post preview...</p>
+                </article>
+                <article class="post">
+                    <h3>post title three</h3>
+                    <span class="date">november 2025</span>
+                    <p>more thoughts and ideas...</p>
+                </article>
+                <article class="post">
+                    <h3>post title four</h3>
+                    <span class="date">october 2025</span>
+                    <p>sharing what i've been learning...</p>
+                </article>
+                <article class="post">
+                    <h3>post title five</h3>
+                    <span class="date">september 2025</span>
+                    <p>some reflections on...</p>
+                </article>
+                <div class="older-posts hidden">
+                    <article class="post">
+                        <h3>post title six</h3>
+                        <span class="date">august 2025</span>
+                        <p>older post content...</p>
+                    </article>
+                    <article class="post">
+                        <h3>post title seven</h3>
+                        <span class="date">july 2025</span>
+                        <p>another older post...</p>
+                    </article>
+                </div>
+                <button class="show-more" onclick="toggleOlderPosts()">show older posts ↓</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="life">
+        <div class="content">
+            <h2>life</h2>
+            <p>things i love and enjoy</p>
+            <ul>
+                <li>☕ coffee in the morning</li>
+                <li>📚 reading good books</li>
+                <li>🎵 discovering new music</li>
+                <li>🌱 learning new things</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="resume">
+        <div class="content">
+            <h2>resume</h2>
+            <p>want to know more about my work?</p>
+            <a href="resume.pdf" class="resume-link" download>download resume (pdf)</a>
+        </div>
+    </section>
+
+    <section id="ideas">
+        <div class="content">
+            <h2>ideas</h2>
+            <p>random thoughts and projects i'm thinking about</p>
+            <div class="idea-grid">
+                <div class="idea-card">💡 build something cool</div>
+                <div class="idea-card">🚀 learn a new skill</div>
+                <div class="idea-card">🎨 creative project</div>
+                <div class="idea-card">🌍 travel somewhere new</div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
