@@ -1,6 +1,19 @@
-// Automatically discover blog posts from directory
+// Automatically discover blog posts from directory or manifest
 async function discoverBlogPosts() {
     try {
+        // First, try to fetch the manifest file (works on GitHub Pages)
+        try {
+            const manifestResponse = await fetch('blog-posts/manifest.json');
+            if (manifestResponse.ok) {
+                const blogPosts = await manifestResponse.json();
+                console.log('Loaded blog posts from manifest');
+                return blogPosts;
+            }
+        } catch (err) {
+            console.log('Manifest not available, trying directory listing');
+        }
+
+        // Fallback: try directory listing (works on local servers)
         const response = await fetch('blog-posts/');
         const html = await response.text();
 
