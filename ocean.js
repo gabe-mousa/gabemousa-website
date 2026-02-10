@@ -12,7 +12,7 @@ class PixelOcean {
 
         // Animation control parameters
         this.pixelSize = 6; // Size of each "pixel" in the pixel art
-        this.animationSpeedMultiplier = 1; // Overall animation speed
+        this.animationSpeedMultiplier = 0.5; // Overall animation speed (default to 0.5x)
         this.waveSpeedMultiplier = 1;
         this.fishSpeedMultiplier = 1;
         this.dolphinSpeedMultiplier = 1;
@@ -449,6 +449,7 @@ class PixelOcean {
                 if (feature.y < -5) feature.y = this.rows + 5;
                 if (feature.y > this.rows + 5) feature.y = -5;
             }
+            // Islands remain static (no animation)
         });
     }
 

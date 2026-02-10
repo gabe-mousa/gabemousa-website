@@ -233,23 +233,23 @@ canvas {
     top: 80px;
     right: 20px;
     background: rgba(232, 212, 162, 0.95);
-    padding: 1.5rem;
-    border-radius: 20px;
+    padding: 1rem;
+    border-radius: 15px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    border: 3px solid #C2B280;
+    border: 2px solid #C2B280;
     z-index: 9999;
-    min-width: 220px;
+    min-width: 180px;
     backdrop-filter: blur(10px);
     cursor: auto !important;
 }
 
 .island-header {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 400;
     color: #2F5233;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     text-align: center;
-    padding: 0.5rem;
+    padding: 0.4rem;
     border-bottom: 2px solid #C2B280;
     cursor: pointer !important;
     user-select: none;
@@ -282,11 +282,11 @@ canvas {
 }
 
 .ocean-island-controls.collapsed .header-text::before {
-    content: '🗺️ map controls';
+    content: 'ocean controls';
 }
 
 .ocean-island-controls:not(.collapsed) .header-text::before {
-    content: '🏝️ ocean controls';
+    content: 'ocean controls';
 }
 
 .ocean-island-controls.collapsed .island-header {
@@ -307,20 +307,20 @@ canvas {
 }
 
 .control-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 }
 
 .control-group label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: #5a4a2a;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem;
     font-weight: 400;
 }
 
 .control-group input[type="range"] {
     width: 100%;
-    height: 6px;
+    height: 5px;
     border-radius: 3px;
     background: rgba(194, 178, 128, 0.5);
     outline: none;
@@ -331,8 +331,8 @@ canvas {
 .control-group input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background: #3D6B40;
     cursor: pointer !important;
@@ -340,8 +340,8 @@ canvas {
 }
 
 .control-group input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background: #3D6B40;
     cursor: pointer !important;
@@ -351,24 +351,24 @@ canvas {
 
 .value-display {
     display: inline-block;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: #3D6B40;
-    margin-top: 0.2rem;
+    margin-top: 0.15rem;
     font-weight: 400;
 }
 
 .island-button {
     width: 100%;
-    padding: 0.7rem;
+    padding: 0.6rem;
     background: #3D6B40;
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 0.9rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
     font-weight: 400;
     cursor: pointer !important;
     transition: all 0.3s ease;
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
 }
 
 .island-button:hover {
