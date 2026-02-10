@@ -68,14 +68,14 @@ class PixelOcean {
         this.features = [];
 
         // Generate islands (larger, more visible from top)
-        const islandCount = Math.floor(3 + Math.random() * 5);
+        const islandCount = Math.floor(5 + Math.random() * 10);
         for (let i = 0; i < islandCount; i++) {
             this.features.push({
                 type: 'island',
                 x: Math.random() * this.cols,
                 y: Math.random() * this.rows,
-                width: 8 + Math.floor(Math.random() * 15),
-                height: 8 + Math.floor(Math.random() * 15),
+                width: 8 + Math.floor(Math.random() * 100),
+                height: 8 + Math.floor(Math.random() * 100),
                 shape: this.generateIslandShape()
             });
         }
@@ -776,6 +776,7 @@ class PixelOcean {
 
             // Toggle content visibility with "sail the world" button
             const sailWorldBtn = document.getElementById('sail-world-button');
+            const oceanControls = document.getElementById('ocean-controls');
             if (sailWorldBtn) {
                 let contentVisible = true;
                 sailWorldBtn.addEventListener('click', () => {
@@ -786,10 +787,14 @@ class PixelOcean {
                     if (contentVisible) {
                         sections.forEach(section => section.classList.remove('hidden-content'));
                         if (nav) nav.classList.remove('hidden-content');
+                        sailWorldBtn.classList.remove('sail-mode');
+                        if (oceanControls) oceanControls.classList.remove('sail-mode');
                         sailWorldBtn.textContent = 'sail the world!';
                     } else {
                         sections.forEach(section => section.classList.add('hidden-content'));
                         if (nav) nav.classList.add('hidden-content');
+                        sailWorldBtn.classList.add('sail-mode');
+                        if (oceanControls) oceanControls.classList.add('sail-mode');
                         sailWorldBtn.textContent = 'return to the world!';
                     }
                 });

@@ -8,10 +8,11 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     text-transform: lowercase;
     background: #2a5f7f;
-    color: #333;
+    color: #4a6b7d;
     line-height: 1.6;
-    font-weight: 300;
+    font-weight: 400;
     overflow-x: hidden;
+    letter-spacing: 0.3px;
 }
 
 html {
@@ -22,20 +23,22 @@ nav {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(255, 250, 230, 0.95);
-    backdrop-filter: blur(15px);
+    background: rgba(107, 162, 197, 0.92);
+    backdrop-filter: blur(12px);
     padding: 1rem 2rem;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 10000;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid rgba(100, 180, 220, 0.2);
 }
 
 .nav-name {
-    color: #e5a8ba;
-    font-weight: 400;
+    color: #c5e5f5;
+    font-weight: 500;
     font-size: 1.1rem;
+    letter-spacing: 0.8px;
 }
 
 .nav-links {
@@ -44,17 +47,19 @@ nav {
 }
 
 nav a {
-    color: #e5a8ba;
+    color: #b0d8f0;
     text-decoration: none;
-    font-weight: 300;
+    font-weight: 400;
     transition: all 0.3s ease;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
     cursor: pointer;
+    background: transparent;
 }
 
 nav a:hover {
-    background: rgba(255, 245, 210, 0.8);
+    background: rgba(100, 180, 220, 0.25);
+    color: #e0f4ff;
     transform: translateY(-2px);
 }
 
@@ -69,45 +74,45 @@ section {
 .content {
     max-width: 800px;
     width: 100%;
-    background: rgba(255, 250, 230, 0.95);
+    background: rgba(230, 245, 255, 0.93);
     padding: 3rem;
     border-radius: 30px;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(20px);
-    border: 2px solid rgba(255, 245, 210, 0.7);
+    border: 2px solid rgba(100, 180, 220, 0.3);
 }
 
 h1 {
     font-size: 3rem;
-    color: #e5a8ba;
+    color: #2c5f8d;
     margin-bottom: 1rem;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 h2 {
     font-size: 2rem;
-    color: #e5a8ba;
+    color: #2c5f8d;
     margin-bottom: 1.5rem;
-    border-bottom: 3px solid rgba(229, 168, 186, 0.4);
+    border-bottom: 3px solid rgba(100, 180, 220, 0.4);
     padding-bottom: 0.5rem;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 h3 {
     font-size: 1.3rem;
-    color: #e5a8ba;
+    color: #2c5f8d;
     margin-bottom: 0.3rem;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 p {
     font-size: 1.1rem;
-    color: #666;
+    color: #4a6b7d;
 }
 
 #home .content {
     text-align: center;
-    background: rgba(255, 250, 230, 0.95);
+    background: rgba(230, 245, 255, 0.93);
 }
 
 .blog-posts {
@@ -118,19 +123,19 @@ p {
 
 .post {
     padding: 1.5rem;
-    background: rgba(255, 245, 210, 0.6);
+    background: rgba(200, 230, 255, 0.5);
     border-radius: 15px;
-    border-left: 4px solid #e5a8ba;
+    border-left: 4px solid #64b4dc;
     transition: all 0.3s ease;
 }
 
 .post:hover {
     transform: translateX(5px);
-    box-shadow: 0 5px 15px rgba(229, 168, 186, 0.2);
+    box-shadow: 0 5px 15px rgba(100, 180, 220, 0.2);
 }
 
 .date {
-    color: #999;
+    color: #7a9aaa;
     font-size: 0.9rem;
 }
 
@@ -147,7 +152,7 @@ p {
 .show-more {
     margin-top: 1rem;
     padding: 0.8rem 2rem;
-    background: #e5a8ba;
+    background: #64b4dc;
     color: white;
     border: none;
     border-radius: 25px;
@@ -156,10 +161,11 @@ p {
     text-transform: lowercase;
     transition: all 0.3s ease;
     width: 100%;
+    font-weight: 500;
 }
 
 .show-more:hover {
-    background: #f0b9ca;
+    background: #52a0cc;
     transform: scale(1.02);
 }
 
@@ -177,19 +183,19 @@ li {
     display: inline-block;
     margin-top: 1rem;
     padding: 1rem 2rem;
-    background: #b8dcc8;
+    background: #64b4dc;
     color: white;
     text-decoration: none;
     border-radius: 25px;
     transition: all 0.3s ease;
-    font-weight: 300;
+    font-weight: 500;
     cursor: pointer;
 }
 
 .resume-link:hover {
-    background: #a8d1b8;
+    background: #52a0cc;
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(184, 220, 200, 0.4);
+    box-shadow: 0 5px 15px rgba(100, 180, 220, 0.3);
 }
 
 .idea-grid {
@@ -201,7 +207,7 @@ li {
 
 .idea-card {
     padding: 2rem 1rem;
-    background: rgba(255, 245, 210, 0.6);
+    background: rgba(200, 230, 255, 0.5);
     border-radius: 15px;
     text-align: center;
     transition: all 0.3s ease;
@@ -210,8 +216,8 @@ li {
 
 .idea-card:hover {
     transform: translateY(-5px);
-    border-color: #e5a8ba;
-    box-shadow: 0 5px 20px rgba(229, 168, 186, 0.2);
+    border-color: #64b4dc;
+    box-shadow: 0 5px 20px rgba(100, 180, 220, 0.2);
 }
 
 /* Ensure interactive elements show cursor */
@@ -229,27 +235,28 @@ canvas {
     position: fixed;
     top: 80px;
     right: 20px;
-    background: rgba(255, 250, 230, 0.95);
+    background: rgba(230, 245, 255, 0.93);
     padding: 1rem;
     border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(255, 245, 210, 0.8);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(100, 180, 220, 0.3);
     z-index: 9999;
     min-width: 180px;
     max-height: calc(100vh - 100px);
     backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
+    transition: top 0.4s ease, right 0.4s ease;
 }
 
 .island-header {
     font-size: 0.95rem;
-    font-weight: 400;
-    color: #e5a8ba;
+    font-weight: 500;
+    color: #2c5f8d;
     margin-bottom: 0.8rem;
     text-align: center;
     padding: 0.4rem;
-    border-bottom: 2px solid rgba(229, 168, 186, 0.4);
+    border-bottom: 2px solid rgba(100, 180, 220, 0.3);
     cursor: pointer;
     user-select: none;
     display: flex;
@@ -260,7 +267,7 @@ canvas {
 }
 
 .island-header:hover {
-    background: rgba(255, 245, 210, 0.5);
+    background: rgba(100, 180, 220, 0.15);
     border-radius: 8px;
 }
 
@@ -308,17 +315,17 @@ canvas {
 }
 
 .controls-content::-webkit-scrollbar-track {
-    background: rgba(255, 245, 210, 0.5);
+    background: rgba(100, 180, 220, 0.2);
     border-radius: 3px;
 }
 
 .controls-content::-webkit-scrollbar-thumb {
-    background: #e5a8ba;
+    background: #64b4dc;
     border-radius: 3px;
 }
 
 .controls-content::-webkit-scrollbar-thumb:hover {
-    background: #f0b9ca;
+    background: #52a0cc;
 }
 
 .ocean-island-controls.collapsed .controls-content {
@@ -334,16 +341,16 @@ canvas {
 .control-group label {
     display: block;
     font-size: 0.75rem;
-    color: #e5a8ba;
+    color: #2c5f8d;
     margin-bottom: 0.25rem;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .control-group input[type="range"] {
     width: 100%;
     height: 5px;
     border-radius: 3px;
-    background: rgba(255, 245, 210, 0.7);
+    background: rgba(100, 180, 220, 0.3);
     outline: none;
     -webkit-appearance: none;
     cursor: pointer;
@@ -355,7 +362,7 @@ canvas {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #e5a8ba;
+    background: #64b4dc;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -364,7 +371,7 @@ canvas {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #e5a8ba;
+    background: #64b4dc;
     cursor: pointer;
     border: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -373,29 +380,29 @@ canvas {
 .value-display {
     display: inline-block;
     font-size: 0.65rem;
-    color: #e5a8ba;
+    color: #2c5f8d;
     margin-top: 0.15rem;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .island-button {
     width: 100%;
     padding: 0.6rem;
-    background: #e5a8ba;
+    background: #64b4dc;
     color: white;
     border: none;
     border-radius: 10px;
     font-size: 0.8rem;
-    font-weight: 400;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 0.4rem;
 }
 
 .island-button:hover {
-    background: #f0b9ca;
+    background: #52a0cc;
     transform: scale(1.02);
-    box-shadow: 0 3px 10px rgba(229, 168, 186, 0.3);
+    box-shadow: 0 3px 10px rgba(100, 180, 220, 0.3);
 }
 
 /* Sail the World Button */
@@ -403,35 +410,59 @@ canvas {
     position: fixed;
     top: 80px;
     right: 220px;
-    background: rgba(255, 250, 230, 0.95);
-    color: #e5a8ba;
+    background: rgba(230, 245, 255, 0.93);
+    color: #2c5f8d;
     padding: 1rem 1.5rem;
-    border: 2px solid rgba(255, 245, 210, 0.8);
+    border: 2px solid rgba(100, 180, 220, 0.3);
     border-radius: 15px;
     font-size: 0.9rem;
-    font-weight: 400;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: top 0.4s ease, right 0.4s ease, background 0.3s ease, color 0.3s ease, transform 0.3s ease;
     z-index: 9999;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     text-transform: lowercase;
     font-family: inherit;
 }
 
 .sail-world-btn:hover {
-    background: rgba(255, 245, 210, 0.98);
+    background: rgba(200, 230, 255, 0.95);
+    color: #1a3a52;
     transform: scale(1.05);
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
 }
 
 /* Content hiding for "sail the world" mode */
 section.hidden-content {
-    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+section {
+    transition: opacity 0.4s ease;
 }
 
 nav.hidden-content {
-    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+nav {
+    transition: opacity 0.4s ease;
+}
+
+/* Sail the world mode - reposition buttons */
+.sail-world-btn.sail-mode {
+    top: 20px;
+    right: 220px;
+}
+
+.ocean-island-controls.sail-mode {
+    top: 20px;
+    right: 20px;
 }
 
 @media (max-width: 768px) {
