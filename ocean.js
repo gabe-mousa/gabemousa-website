@@ -26,6 +26,7 @@ class PixelOcean {
         this.canvas.height = window.innerHeight;
         this.cols = Math.ceil(this.canvas.width / this.pixelSize);
         this.rows = Math.ceil(this.canvas.height / this.pixelSize);
+        this.oceanMap = null; // Clear ocean map on resize
     }
 
     setupEventListeners() {
@@ -45,6 +46,9 @@ class PixelOcean {
     }
 
     generateOcean() {
+        // Generate a completely random ocean map (not pattern-based)
+        this.generateOceanMap();
+
         // Generate random ocean features from top-down view
         this.features = [];
 
@@ -139,6 +143,85 @@ class PixelOcean {
         }
     }
 
+    generateOceanMap() {
+        // Generate a completely random, unique ocean depth map
+        this.oceanMap = [];
+
+        // Create random seed points for depth variation
+        const depthSeeds = [];
+        const numSeeds = 20 + Math.floor(Math.random() * 30);
+
+        for (let i = 0; i < numSeeds; i++) {
+            depthSeeds.push({
+                x: Math.random() * this.cols,
+                y: Math.random() * this.rows,
+                depth: Math.random(), // 0 = shallow, 1 = deep
+                influence: 20 + Math.random() * 40
+            });
+        }
+
+        // Generate ocean currents/flow patterns (random paths)
+        const currents = [];
+        const numCurrents = 5 + Math.floor(Math.random() * 10);
+
+        for (let i = 0; i < numCurrents; i++) {
+            const current = {
+                points: [],
+                strength: 0.3 + Math.random() * 0.5
+            };
+
+            let cx = Math.random() * this.cols;
+            let cy = Math.random() * this.rows;
+            const angle = Math.random() * Math.PI * 2;
+            const numPoints = 10 + Math.floor(Math.random() * 20);
+
+            for (let j = 0; j < numPoints; j++) {
+                current.points.push({x: cx, y: cy});
+                cx += Math.cos(angle + Math.sin(j * 0.3) * 0.8) * (5 + Math.random() * 10);
+                cy += Math.sin(angle + Math.cos(j * 0.3) * 0.8) * (5 + Math.random() * 10);
+            }
+
+            currents.push(current);
+        }
+
+        // Build the depth map for each pixel
+        for (let y = 0; y < this.rows; y++) {
+            this.oceanMap[y] = [];
+            for (let x = 0; x < this.cols; x++) {
+                let depth = 0.5; // Base medium depth
+                let totalInfluence = 0;
+
+                // Calculate influence from depth seeds
+                for (const seed of depthSeeds) {
+                    const dist = Math.sqrt(Math.pow(x - seed.x, 2) + Math.pow(y - seed.y, 2));
+                    const influence = Math.max(0, 1 - dist / seed.influence);
+                    depth += (seed.depth - 0.5) * influence;
+                    totalInfluence += influence;
+                }
+
+                // Add current influence
+                for (const current of currents) {
+                    let minDist = Infinity;
+                    for (const point of current.points) {
+                        const dist = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+                        minDist = Math.min(minDist, dist);
+                    }
+                    if (minDist < 15) {
+                        depth += (0.5 - depth) * current.strength * (1 - minDist / 15);
+                    }
+                }
+
+                // Add some fine grain noise
+                depth += (Math.random() - 0.5) * 0.15;
+
+                // Clamp depth
+                depth = Math.max(0, Math.min(1, depth));
+
+                this.oceanMap[y][x] = depth;
+            }
+        }
+    }
+
     generateIslandShape() {
         const size = 5 + Math.floor(Math.random() * 8);
         const shape = [];
@@ -174,40 +257,66 @@ class PixelOcean {
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    getWavePattern(x, y, time) {
-        // Create top-down wave patterns (ripples and surface movement)
-        const wave1 = Math.sin(x * 0.15 + y * 0.1 + time * 0.8);
-        const wave2 = Math.cos(x * 0.1 - y * 0.15 + time * 0.6);
-        const wave3 = Math.sin((x + y) * 0.08 + time * 0.5);
-        return (wave1 + wave2 + wave3) / 3;
+    getLocalWaveAnimation(x, y, time) {
+        // Subtle wave animation on top of the static map
+        const wave1 = Math.sin(x * 0.2 + time * 1.2) * 0.03;
+        const wave2 = Math.cos(y * 0.18 + time * 0.9) * 0.03;
+        const wave3 = Math.sin((x + y) * 0.12 + time * 0.6) * 0.02;
+        return wave1 + wave2 + wave3;
     }
 
     getOceanColor(x, y, time) {
-        // Top-down view: varying shades of blue for depth and waves
-        const wavePattern = this.getWavePattern(x, y, time);
-        const noiseX = Math.sin(x * 0.3 + time * 0.2) * Math.cos(y * 0.25);
-        const noiseY = Math.cos(y * 0.28 + time * 0.3) * Math.sin(x * 0.22);
-        const depth = (noiseX + noiseY + wavePattern) / 3;
+        // Use pre-generated ocean map for completely random appearance
+        if (!this.oceanMap || y >= this.oceanMap.length || x >= this.oceanMap[0].length) {
+            return 'rgb(40, 120, 160)'; // Fallback color
+        }
 
-        // Normalize depth to 0-1 range
-        const normalizedDepth = (depth + 1) / 2;
+        // Get base depth from the random map
+        let depth = this.oceanMap[y][x];
 
-        // Color palette for top-down ocean view
-        if (normalizedDepth < 0.2) {
-            // Very shallow / wave crests - lighter turquoise
-            return `rgb(${80 + Math.random() * 20}, ${190 + Math.random() * 20}, ${215 + Math.random() * 25})`;
-        } else if (normalizedDepth < 0.4) {
+        // Add subtle animated waves on top
+        depth += this.getLocalWaveAnimation(x, y, time);
+
+        // Clamp depth
+        depth = Math.max(0, Math.min(1, depth));
+
+        // Color palette based on depth (from shallow to deep)
+        if (depth < 0.15) {
+            // Very shallow - light turquoise (sandbars, shallows)
+            const r = 85 + Math.floor(Math.random() * 25);
+            const g = 195 + Math.floor(Math.random() * 25);
+            const b = 220 + Math.floor(Math.random() * 20);
+            return `rgb(${r}, ${g}, ${b})`;
+        } else if (depth < 0.3) {
             // Shallow water - bright blue
-            return `rgb(${60 + Math.random() * 15}, ${165 + Math.random() * 20}, ${200 + Math.random() * 20})`;
-        } else if (normalizedDepth < 0.6) {
-            // Medium depth - medium blue
-            return `rgb(${45 + Math.random() * 15}, ${140 + Math.random() * 15}, ${180 + Math.random() * 15})`;
-        } else if (normalizedDepth < 0.8) {
-            // Deep water - darker blue
-            return `rgb(${30 + Math.random() * 10}, ${110 + Math.random() * 15}, ${155 + Math.random() * 15})`;
+            const r = 65 + Math.floor(Math.random() * 20);
+            const g = 170 + Math.floor(Math.random() * 25);
+            const b = 205 + Math.floor(Math.random() * 20);
+            return `rgb(${r}, ${g}, ${b})`;
+        } else if (depth < 0.5) {
+            // Medium shallow - medium blue
+            const r = 50 + Math.floor(Math.random() * 18);
+            const g = 145 + Math.floor(Math.random() * 20);
+            const b = 185 + Math.floor(Math.random() * 18);
+            return `rgb(${r}, ${g}, ${b})`;
+        } else if (depth < 0.65) {
+            // Medium depth - darker blue
+            const r = 38 + Math.floor(Math.random() * 15);
+            const g = 120 + Math.floor(Math.random() * 18);
+            const b = 165 + Math.floor(Math.random() * 15);
+            return `rgb(${r}, ${g}, ${b})`;
+        } else if (depth < 0.8) {
+            // Deep water - navy blue
+            const r = 28 + Math.floor(Math.random() * 12);
+            const g = 95 + Math.floor(Math.random() * 15);
+            const b = 145 + Math.floor(Math.random() * 12);
+            return `rgb(${r}, ${g}, ${b})`;
         } else {
-            // Very deep - darkest blue
-            return `rgb(${20 + Math.random() * 8}, ${85 + Math.random() * 12}, ${130 + Math.random() * 12})`;
+            // Very deep - darkest navy
+            const r = 18 + Math.floor(Math.random() * 10);
+            const g = 70 + Math.floor(Math.random() * 15);
+            const b = 120 + Math.floor(Math.random() * 15);
+            return `rgb(${r}, ${g}, ${b})`;
         }
     }
 
