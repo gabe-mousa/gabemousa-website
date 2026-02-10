@@ -227,6 +227,103 @@ canvas {
     display: block;
 }
 
+/* Ocean Control Panel Island */
+.ocean-island-controls {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: rgba(232, 212, 162, 0.95);
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    border: 3px solid #C2B280;
+    z-index: 9999;
+    min-width: 220px;
+    backdrop-filter: blur(10px);
+    cursor: auto !important;
+}
+
+.island-header {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #2F5233;
+    margin-bottom: 1rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #C2B280;
+}
+
+.control-group {
+    margin-bottom: 1rem;
+}
+
+.control-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #5a4a2a;
+    margin-bottom: 0.3rem;
+    font-weight: 400;
+}
+
+.control-group input[type="range"] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(194, 178, 128, 0.5);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer !important;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #3D6B40;
+    cursor: pointer !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.control-group input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #3D6B40;
+    cursor: pointer !important;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.value-display {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: #3D6B40;
+    margin-top: 0.2rem;
+    font-weight: 400;
+}
+
+.island-button {
+    width: 100%;
+    padding: 0.7rem;
+    background: #3D6B40;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    cursor: pointer !important;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.island-button:hover {
+    background: #2F5233;
+    transform: scale(1.02);
+    box-shadow: 0 3px 10px rgba(47, 82, 51, 0.3);
+}
+
 @media (max-width: 768px) {
     nav {
         padding: 1rem;
@@ -261,5 +358,27 @@ canvas {
 
     .idea-grid {
         grid-template-columns: 1fr 1fr;
+    }
+
+    /* Make ocean controls smaller on mobile */
+    .ocean-island-controls {
+        top: 120px;
+        right: 10px;
+        padding: 1rem;
+        min-width: 180px;
+        font-size: 0.85rem;
+    }
+
+    .island-header {
+        font-size: 0.95rem;
+    }
+
+    .control-group label {
+        font-size: 0.75rem;
+    }
+
+    .island-button {
+        font-size: 0.8rem;
+        padding: 0.5rem;
     }
 }

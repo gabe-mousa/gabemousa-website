@@ -18,6 +18,37 @@
         </div>
     </nav>
 
+    <!-- Ocean Control Panel Island -->
+    <div id="ocean-controls" class="ocean-island-controls">
+        <div class="island-header">🏝️ ocean controls</div>
+        <div class="control-group">
+            <label for="wave-speed">wave speed</label>
+            <input type="range" id="wave-speed" min="0" max="3" step="0.1" value="1">
+            <span class="value-display">1.0x</span>
+        </div>
+        <div class="control-group">
+            <label for="fish-speed">fish speed</label>
+            <input type="range" id="fish-speed" min="0" max="5" step="0.1" value="1">
+            <span class="value-display">1.0x</span>
+        </div>
+        <div class="control-group">
+            <label for="dolphin-speed">dolphin speed</label>
+            <input type="range" id="dolphin-speed" min="0" max="5" step="0.1" value="1">
+            <span class="value-display">1.0x</span>
+        </div>
+        <div class="control-group">
+            <label for="boat-size">boat size</label>
+            <input type="range" id="boat-size" min="0.5" max="2.5" step="0.1" value="1">
+            <span class="value-display">1.0x</span>
+        </div>
+        <div class="control-group">
+            <label for="pixel-size">pixel size</label>
+            <input type="range" id="pixel-size" min="3" max="12" step="1" value="6">
+            <span class="value-display">6px</span>
+        </div>
+        <button id="regenerate-ocean" class="island-button">🌊 regenerate ocean</button>
+    </div>
+
     <section id="home">
         <div class="content">
             <h1>hey there</h1>
