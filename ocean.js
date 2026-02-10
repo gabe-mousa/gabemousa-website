@@ -16,7 +16,7 @@ class PixelOcean {
         this.waveSpeedMultiplier = 1;
         this.fishSpeedMultiplier = 1;
         this.dolphinSpeedMultiplier = 1;
-        this.boatSizeMultiplier = 1;
+        this.boatSizeMultiplier = 0.6; // Smaller boat size
         this.boatSpeedMultiplier = 1; // Speed at which boat follows cursor
 
         this.mouseX = 0;
@@ -400,7 +400,7 @@ class PixelOcean {
     }
 
     drawSailboat() {
-        // Classic pixel art sailboat (8-bit style)
+        // Pixel art sailboat matching reference image
         const x = Math.floor(this.boatX / this.pixelSize);
         const y = Math.floor(this.boatY / this.pixelSize);
         const s = this.boatSizeMultiplier;
@@ -409,137 +409,311 @@ class PixelOcean {
         const bob = Math.sin(this.time * 2) * 0.5;
         const yOffset = Math.floor(bob);
 
-        // === HULL (simple brown wooden boat) ===
-        // Hull bottom - dark outline
-        this.drawPixel(x - 5 * s, y + 3 * s + yOffset, '#4E342E');
-        this.drawPixel(x - 4 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x - 3 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x - 2 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x - 1 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x + 1 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x + 2 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x + 3 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x + 4 * s, y + 4 * s + yOffset, '#4E342E');
-        this.drawPixel(x + 5 * s, y + 3 * s + yOffset, '#4E342E');
+        const p = (dx, dy, color) => {
+            this.drawPixel(x + Math.round(dx * s), y + Math.round(dy * s) + yOffset, color);
+        };
 
-        // Hull middle - brown wood
-        this.drawPixel(x - 4 * s, y + 3 * s + yOffset, '#8D6E63');
-        this.drawPixel(x - 3 * s, y + 3 * s + yOffset, '#A1887F');
-        this.drawPixel(x - 2 * s, y + 3 * s + yOffset, '#A1887F');
-        this.drawPixel(x - 1 * s, y + 3 * s + yOffset, '#BCAAA4');
-        this.drawPixel(x, y + 3 * s + yOffset, '#BCAAA4');
-        this.drawPixel(x + 1 * s, y + 3 * s + yOffset, '#BCAAA4');
-        this.drawPixel(x + 2 * s, y + 3 * s + yOffset, '#A1887F');
-        this.drawPixel(x + 3 * s, y + 3 * s + yOffset, '#A1887F');
-        this.drawPixel(x + 4 * s, y + 3 * s + yOffset, '#8D6E63');
+        // Colors from reference
+        const BLACK = '#1a1a1a';
+        const DKGRAY = '#555555';
+        const MDGRAY = '#888888';
+        const LTGRAY = '#bbbbbb';
+        const VLGRAY = '#d0d0d0';
+        const WHITE = '#ffffff';
+        const SAIL_W = '#f0f0f0';
+        const SAIL_L = '#e0e0e0';
 
-        // Deck
-        this.drawPixel(x - 3 * s, y + 2 * s + yOffset, '#6D4C41');
-        this.drawPixel(x - 2 * s, y + 2 * s + yOffset, '#795548');
-        this.drawPixel(x - 1 * s, y + 2 * s + yOffset, '#795548');
-        this.drawPixel(x, y + 2 * s + yOffset, '#795548');
-        this.drawPixel(x + 1 * s, y + 2 * s + yOffset, '#795548');
-        this.drawPixel(x + 2 * s, y + 2 * s + yOffset, '#795548');
-        this.drawPixel(x + 3 * s, y + 2 * s + yOffset, '#6D4C41');
-
-        // === MAST (simple brown wooden mast) ===
-        this.drawPixel(x, y + 1 * s + yOffset, '#5D4037');
-        this.drawPixel(x, y + yOffset, '#5D4037');
-        this.drawPixel(x, y - 1 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 2 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 3 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 4 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 5 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 6 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 7 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 8 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 9 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 10 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 11 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 12 * s + yOffset, '#6D4C41');
-        this.drawPixel(x, y - 13 * s + yOffset, '#6D4C41');
-
-        // === MAINSAIL (large white triangular sail) ===
-        // Row by row from top
-        this.drawPixel(x, y - 13 * s + yOffset, '#FFFFFF');
-
-        this.drawPixel(x, y - 12 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 12 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 11 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 11 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 11 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 10 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 10 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 10 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 10 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 9 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 9 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 9 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 9 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 4 * s, y - 9 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 8 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 8 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 8 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 8 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 4 * s, y - 8 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 5 * s, y - 8 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 7 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 7 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 7 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 7 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 4 * s, y - 7 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 5 * s, y - 7 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 6 * s, y - 7 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 6 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 6 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 6 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 6 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 4 * s, y - 6 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 5 * s, y - 6 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 6 * s, y - 6 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 7 * s, y - 6 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 5 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 5 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 5 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 5 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 4 * s, y - 5 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 5 * s, y - 5 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 6 * s, y - 5 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 4 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 4 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 4 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 4 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 4 * s, y - 4 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 5 * s, y - 4 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 3 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 3 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 3 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 3 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 4 * s, y - 3 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 2 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 2 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 2 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 3 * s, y - 2 * s + yOffset, '#F5F5F5');
-
-        this.drawPixel(x, y - 1 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 1 * s, y - 1 * s + yOffset, '#FFFFFF');
-        this.drawPixel(x + 2 * s, y - 1 * s + yOffset, '#F5F5F5');
+        const RED = '#cc2222';
+        const DKRED = '#991111';
 
         // === FLAG at top of mast ===
-        const flagWave = Math.sin(this.time * 4) * 0.3;
-        this.drawPixel(x + 1 * s, y - 14 * s + yOffset + flagWave, '#E53935');
-        this.drawPixel(x + 2 * s, y - 14 * s + yOffset + flagWave, '#D32F2F');
+        const fw = Math.sin(this.time * 4) * 0.3;
+        p(1, -22 + fw, RED);
+        p(2, -22 + fw, RED);
+        p(1, -21 + fw, DKRED);
+
+        // === MAST - tall vertical black line (2 pixels wide with highlight) ===
+        // Mast extends well above where sails attach, creating visible luff space
+        for (let i = -21; i <= 1; i++) {
+            p(0, i, BLACK);
+        }
+        // Mast highlight stripe
+        for (let i = -20; i <= 0; i++) {
+            p(-1, i, DKGRAY);
+        }
+
+        // === LEFT SAIL (jib) - narrow tall triangle to the left of mast ===
+        // Widens ~1px every 2 rows for a slim profile
+        // Row -15
+        p(-2, -15, SAIL_L);
+
+        // Row -14
+        p(-2, -14, SAIL_W);
+
+        // Row -13
+        p(-2, -13, WHITE);
+        p(-3, -13, SAIL_L);
+
+        // Row -12
+        p(-2, -12, WHITE);
+        p(-3, -12, SAIL_W);
+
+        // Row -11
+        p(-2, -11, WHITE);
+        p(-3, -11, SAIL_W);
+        p(-4, -11, SAIL_L);
+
+        // Row -10
+        p(-2, -10, WHITE);
+        p(-3, -10, WHITE);
+        p(-4, -10, SAIL_W);
+
+        // Row -9
+        p(-2, -9, WHITE);
+        p(-3, -9, WHITE);
+        p(-4, -9, SAIL_W);
+        p(-5, -9, SAIL_L);
+
+        // Row -8
+        p(-2, -8, WHITE);
+        p(-3, -8, WHITE);
+        p(-4, -8, SAIL_W);
+        p(-5, -8, SAIL_L);
+
+        // Row -7
+        p(-2, -7, WHITE);
+        p(-3, -7, WHITE);
+        p(-4, -7, SAIL_W);
+        p(-5, -7, SAIL_W);
+        p(-6, -7, SAIL_L);
+
+        // Row -6
+        p(-2, -6, WHITE);
+        p(-3, -6, WHITE);
+        p(-4, -6, WHITE);
+        p(-5, -6, SAIL_W);
+        p(-6, -6, SAIL_L);
+
+        // Row -5
+        p(-2, -5, WHITE);
+        p(-3, -5, WHITE);
+        p(-4, -5, WHITE);
+        p(-5, -5, SAIL_W);
+        p(-6, -5, SAIL_W);
+        p(-7, -5, SAIL_L);
+
+        // Row -4
+        p(-2, -4, WHITE);
+        p(-3, -4, WHITE);
+        p(-4, -4, WHITE);
+        p(-5, -4, SAIL_W);
+        p(-6, -4, SAIL_W);
+        p(-7, -4, SAIL_L);
+
+        // Row -3
+        p(-2, -3, WHITE);
+        p(-3, -3, WHITE);
+        p(-4, -3, WHITE);
+        p(-5, -3, SAIL_W);
+        p(-6, -3, SAIL_W);
+        p(-7, -3, SAIL_L);
+
+        // Left sail diagonal outline (rigging line)
+        p(-2, -15, BLACK);
+        p(-2, -14, BLACK);
+        p(-3, -13, BLACK);
+        p(-3, -12, BLACK);
+        p(-4, -11, BLACK);
+        p(-4, -10, BLACK);
+        p(-5, -9, BLACK);
+        p(-5, -8, BLACK);
+        p(-6, -7, BLACK);
+        p(-6, -6, BLACK);
+        p(-7, -5, BLACK);
+        p(-7, -4, BLACK);
+        p(-7, -3, BLACK);
+
+        // Left rigging line from mast top to sail top
+        p(-1, -17, BLACK);
+        p(-1, -16, BLACK);
+        p(-2, -15, BLACK);
+
+        // === RIGHT SAIL (mainsail) - tall triangle to the right of mast ===
+        // Row -16
+        p(1, -16, SAIL_L);
+
+        // Row -15
+        p(1, -15, SAIL_W);
+        p(2, -15, SAIL_L);
+
+        // Row -14
+        p(1, -14, WHITE);
+        p(2, -14, SAIL_W);
+        p(3, -14, SAIL_L);
+
+        // Row -13
+        p(1, -13, WHITE);
+        p(2, -13, SAIL_W);
+        p(3, -13, SAIL_W);
+
+        // Row -12
+        p(1, -12, WHITE);
+        p(2, -12, WHITE);
+        p(3, -12, SAIL_W);
+        p(4, -12, SAIL_L);
+
+        // Row -11
+        p(1, -11, WHITE);
+        p(2, -11, WHITE);
+        p(3, -11, SAIL_W);
+        p(4, -11, SAIL_W);
+
+        // Row -10
+        p(1, -10, WHITE);
+        p(2, -10, WHITE);
+        p(3, -10, WHITE);
+        p(4, -10, SAIL_W);
+        p(5, -10, SAIL_L);
+
+        // Row -9
+        p(1, -9, WHITE);
+        p(2, -9, WHITE);
+        p(3, -9, WHITE);
+        p(4, -9, SAIL_W);
+        p(5, -9, SAIL_L);
+
+        // Row -8
+        p(1, -8, WHITE);
+        p(2, -8, WHITE);
+        p(3, -8, WHITE);
+        p(4, -8, SAIL_W);
+        p(5, -8, SAIL_W);
+        p(6, -8, SAIL_L);
+
+        // Row -7
+        p(1, -7, WHITE);
+        p(2, -7, WHITE);
+        p(3, -7, WHITE);
+        p(4, -7, WHITE);
+        p(5, -7, SAIL_W);
+        p(6, -7, SAIL_W);
+
+        // Row -6
+        p(1, -6, WHITE);
+        p(2, -6, WHITE);
+        p(3, -6, WHITE);
+        p(4, -6, WHITE);
+        p(5, -6, SAIL_W);
+        p(6, -6, SAIL_W);
+        p(7, -6, SAIL_L);
+
+        // Row -5
+        p(1, -5, WHITE);
+        p(2, -5, WHITE);
+        p(3, -5, WHITE);
+        p(4, -5, WHITE);
+        p(5, -5, SAIL_W);
+        p(6, -5, SAIL_W);
+        p(7, -5, SAIL_L);
+
+        // Row -4
+        p(1, -4, WHITE);
+        p(2, -4, WHITE);
+        p(3, -4, WHITE);
+        p(4, -4, WHITE);
+        p(5, -4, WHITE);
+        p(6, -4, SAIL_W);
+        p(7, -4, SAIL_W);
+        p(8, -4, SAIL_L);
+
+        // Row -3
+        p(1, -3, WHITE);
+        p(2, -3, WHITE);
+        p(3, -3, WHITE);
+        p(4, -3, WHITE);
+        p(5, -3, WHITE);
+        p(6, -3, SAIL_W);
+        p(7, -3, SAIL_W);
+        p(8, -3, SAIL_L);
+
+        // Right sail diagonal outline (rigging line)
+        p(1, -16, BLACK);
+        p(2, -15, BLACK);
+        p(3, -14, BLACK);
+        p(3, -13, BLACK);
+        p(4, -12, BLACK);
+        p(4, -11, BLACK);
+        p(5, -10, BLACK);
+        p(5, -9, BLACK);
+        p(6, -8, BLACK);
+        p(6, -7, BLACK);
+        p(7, -6, BLACK);
+        p(7, -5, BLACK);
+        p(8, -4, BLACK);
+        p(8, -3, BLACK);
+
+        // Right rigging line from mast top to sail top
+        p(1, -17, BLACK);
+        p(1, -16, BLACK);
+
+        // Bottom edge of sails (horizontal line)
+        for (let i = -7; i <= 8; i++) {
+            if (i === 0 || i === -1) continue; // skip mast
+            p(i, -2, BLACK);
+        }
+
+        // === HULL (asymmetrical: left=bow/pointed, right=stern/flat, elongated) ===
+        // Hull row 0 (top deck) - long and wide
+        for (let i = -9; i <= 12; i++) {
+            p(i, 0, VLGRAY);
+        }
+        p(-10, 0, LTGRAY);
+        p(13, 0, LTGRAY);
+
+        // Hull row 1 - body
+        for (let i = -7; i <= 11; i++) {
+            p(i, 1, LTGRAY);
+        }
+        p(-8, 1, MDGRAY);
+        p(12, 1, MDGRAY);
+
+        // Hull row 2 - lower body, bow narrows
+        for (let i = -4; i <= 9; i++) {
+            p(i, 2, MDGRAY);
+        }
+        p(-5, 2, DKGRAY);
+        p(10, 2, DKGRAY);
+
+        // Hull row 3 - keel, bow comes to point
+        for (let i = -1; i <= 7; i++) {
+            p(i, 3, DKGRAY);
+        }
+        p(-2, 3, DKGRAY);
+
+        // Hull outline - bow (left, pointed)
+        p(-11, 0, BLACK);
+        p(-9, 1, BLACK);
+        p(-6, 2, BLACK);
+        p(-3, 3, BLACK);
+        // Hull outline - stern (right, blunt)
+        p(14, 0, BLACK);
+        p(13, 1, BLACK);
+        p(11, 2, BLACK);
+        p(8, 3, BLACK);
+        // Bottom keel outline
+        for (let i = -2; i <= 7; i++) {
+            p(i, 4, BLACK);
+        }
+        // Bow tip
+        p(-3, 4, BLACK);
+
+        // Mast over hull (redraw to be on top)
+        p(0, -1, BLACK);
+        p(0, 0, BLACK);
+        p(0, 1, BLACK);
+        p(-1, -1, DKGRAY);
+        p(-1, 0, DKGRAY);
+        p(-1, 1, DKGRAY);
     }
 
     adjustBrightness(color, amount) {
@@ -600,6 +774,27 @@ class PixelOcean {
                 });
             }
 
+            // Toggle content visibility with "sail the world" button
+            const sailWorldBtn = document.getElementById('sail-world-button');
+            if (sailWorldBtn) {
+                let contentVisible = true;
+                sailWorldBtn.addEventListener('click', () => {
+                    contentVisible = !contentVisible;
+                    const sections = document.querySelectorAll('section');
+                    const nav = document.querySelector('nav');
+
+                    if (contentVisible) {
+                        sections.forEach(section => section.classList.remove('hidden-content'));
+                        if (nav) nav.classList.remove('hidden-content');
+                        sailWorldBtn.textContent = 'sail the world!';
+                    } else {
+                        sections.forEach(section => section.classList.add('hidden-content'));
+                        if (nav) nav.classList.add('hidden-content');
+                        sailWorldBtn.textContent = 'return to the world!';
+                    }
+                });
+            }
+
             // Animation speed control (affects frame rate)
             const animationSpeedSlider = document.getElementById('animation-speed');
             if (animationSpeedSlider) {
@@ -633,15 +828,6 @@ class PixelOcean {
                 dolphinSpeedSlider.addEventListener('input', (e) => {
                     this.dolphinSpeedMultiplier = parseFloat(e.target.value);
                     e.target.nextElementSibling.textContent = `${this.dolphinSpeedMultiplier.toFixed(1)}x`;
-                });
-            }
-
-            // Boat size control
-            const boatSizeSlider = document.getElementById('boat-size');
-            if (boatSizeSlider) {
-                boatSizeSlider.addEventListener('input', (e) => {
-                    this.boatSizeMultiplier = parseFloat(e.target.value);
-                    e.target.nextElementSibling.textContent = `${this.boatSizeMultiplier.toFixed(1)}x`;
                 });
             }
 
