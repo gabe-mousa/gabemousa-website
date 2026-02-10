@@ -17,9 +17,14 @@ class PixelOcean {
         this.fishSpeedMultiplier = 1;
         this.dolphinSpeedMultiplier = 1;
         this.boatSizeMultiplier = 1;
+        this.boatSpeedMultiplier = 1; // Speed at which boat follows cursor
 
         this.mouseX = 0;
         this.mouseY = 0;
+        this.boatX = 0; // Actual boat position
+        this.boatY = 0; // Actual boat position
+        this.boatIsMoving = false; // Track if boat is currently moving
+        this.boatAngle = 0; // Direction the boat is heading
         this.time = 0;
 
         this.resize();
@@ -48,9 +53,11 @@ class PixelOcean {
             this.mouseY = e.clientY;
         });
 
-        // Initialize mouse position to center
+        // Initialize mouse position and boat position to center
         this.mouseX = window.innerWidth / 2;
         this.mouseY = window.innerHeight / 2;
+        this.boatX = window.innerWidth / 2;
+        this.boatY = window.innerHeight / 2;
     }
 
     generateOcean() {
@@ -317,29 +324,47 @@ class PixelOcean {
         for (let i = 0; i < island.shape.length; i++) {
             for (let j = 0; j < island.shape[i].length; j++) {
                 if (island.shape[i][j]) {
-                    // Beach/shore (light sand)
+                    // Beach/shore (light sand) - static color
                     const isEdge = this.isEdgePixel(island.shape, i, j);
                     if (isEdge) {
                         this.drawPixel(x + i, y + j, '#E8D4A2');
                     } else {
-                        // Interior (green vegetation)
-                        const green = 140 + Math.floor(Math.random() * 40);
-                        this.drawPixel(x + i, y + j, `rgb(${50 + Math.random() * 30}, ${green}, ${60 + Math.random() * 30})`);
+                        // Interior (green vegetation) - use seeded random for consistent color
+                        // Create a unique but consistent seed based on position
+                        if (!island.colorMap) {
+                            island.colorMap = [];
+                            for (let ci = 0; ci < island.shape.length; ci++) {
+                                island.colorMap[ci] = [];
+                                for (let cj = 0; cj < island.shape[ci].length; cj++) {
+                                    const seedValue = (ci * 1000 + cj) / 1000;
+                                    const green = 140 + Math.floor((Math.sin(seedValue * 12.9898) * 0.5 + 0.5) * 40);
+                                    const r = 50 + (Math.sin(seedValue * 78.233) * 0.5 + 0.5) * 30;
+                                    const b = 60 + (Math.sin(seedValue * 45.164) * 0.5 + 0.5) * 30;
+                                    island.colorMap[ci][cj] = `rgb(${r}, ${green}, ${b})`;
+                                }
+                            }
+                        }
+                        this.drawPixel(x + i, y + j, island.colorMap[i][j]);
                     }
                 }
             }
         }
 
-        // Add palm trees on larger islands
-        if (island.width > 10 && Math.random() > 0.5) {
-            const treeX = x + Math.floor(island.width / 2);
-            const treeY = y + Math.floor(island.height / 2);
-            // Palm tree from above (star pattern)
-            this.drawPixel(treeX, treeY, '#2F5233');
-            this.drawPixel(treeX - 1, treeY, '#3D6B40');
-            this.drawPixel(treeX + 1, treeY, '#3D6B40');
-            this.drawPixel(treeX, treeY - 1, '#3D6B40');
-            this.drawPixel(treeX, treeY + 1, '#3D6B40');
+        // Add palm trees on larger islands (cached on first draw)
+        if (island.width > 10) {
+            if (island.hasTree === undefined) {
+                island.hasTree = Math.random() > 0.5;
+            }
+            if (island.hasTree) {
+                const treeX = x + Math.floor(island.width / 2);
+                const treeY = y + Math.floor(island.height / 2);
+                // Palm tree from above (star pattern)
+                this.drawPixel(treeX, treeY, '#2F5233');
+                this.drawPixel(treeX - 1, treeY, '#3D6B40');
+                this.drawPixel(treeX + 1, treeY, '#3D6B40');
+                this.drawPixel(treeX, treeY - 1, '#3D6B40');
+                this.drawPixel(treeX, treeY + 1, '#3D6B40');
+            }
         }
     }
 
@@ -350,62 +375,171 @@ class PixelOcean {
         return shape[i][j] && (!shape[i-1][j] || !shape[i+1][j] || !shape[i][j-1] || !shape[i][j+1]);
     }
 
+    updateBoatPosition() {
+        // Calculate distance to target (mouse position)
+        const dx = this.mouseX - this.boatX;
+        const dy = this.mouseY - this.boatY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Move boat towards mouse if not already there
+        const threshold = 5; // Stop when within 5 pixels of cursor
+        if (distance > threshold) {
+            const speed = 2 * this.boatSpeedMultiplier; // Base speed of 2 pixels per frame
+            const moveX = (dx / distance) * speed;
+            const moveY = (dy / distance) * speed;
+
+            this.boatX += moveX;
+            this.boatY += moveY;
+            this.boatIsMoving = true;
+
+            // Update boat angle to direction of movement
+            this.boatAngle = Math.atan2(dy, dx);
+        } else {
+            this.boatIsMoving = false;
+        }
+    }
+
     drawSailboat() {
-        // Top-down view of sailboat (with size multiplier)
-        const x = Math.floor(this.mouseX / this.pixelSize);
-        const y = Math.floor(this.mouseY / this.pixelSize);
-        const size = this.boatSizeMultiplier;
+        // Classic pixel art sailboat (8-bit style)
+        const x = Math.floor(this.boatX / this.pixelSize);
+        const y = Math.floor(this.boatY / this.pixelSize);
+        const s = this.boatSizeMultiplier;
 
-        // Create wake/ripples behind the boat
-        const wakeOffset = Math.sin(this.time * 3) * 0.5;
-        this.drawPixel(x - 2 * size, y + 2 * size, 'rgba(150, 200, 220, 0.5)');
-        this.drawPixel(x + 2 * size, y + 2 * size, 'rgba(150, 200, 220, 0.5)');
-        this.drawPixel(x - 3 * size + wakeOffset, y + 3 * size, 'rgba(140, 190, 210, 0.3)');
-        this.drawPixel(x + 3 * size + wakeOffset, y + 3 * size, 'rgba(140, 190, 210, 0.3)');
+        // Gentle bobbing animation
+        const bob = Math.sin(this.time * 2) * 0.5;
+        const yOffset = Math.floor(bob);
 
-        // Boat hull from above (brown wooden boat shape)
-        // Bow (front - pointed)
-        this.drawPixel(x, y - 2 * size, '#8B4513');
+        // === HULL (simple brown wooden boat) ===
+        // Hull bottom - dark outline
+        this.drawPixel(x - 5 * s, y + 3 * s + yOffset, '#4E342E');
+        this.drawPixel(x - 4 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x - 3 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x - 2 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x - 1 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x + 1 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x + 2 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x + 3 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x + 4 * s, y + 4 * s + yOffset, '#4E342E');
+        this.drawPixel(x + 5 * s, y + 3 * s + yOffset, '#4E342E');
 
-        // Upper hull
-        this.drawPixel(x - 1 * size, y - 1 * size, '#A0522D');
-        this.drawPixel(x, y - 1 * size, '#A0522D');
-        this.drawPixel(x + 1 * size, y - 1 * size, '#A0522D');
+        // Hull middle - brown wood
+        this.drawPixel(x - 4 * s, y + 3 * s + yOffset, '#8D6E63');
+        this.drawPixel(x - 3 * s, y + 3 * s + yOffset, '#A1887F');
+        this.drawPixel(x - 2 * s, y + 3 * s + yOffset, '#A1887F');
+        this.drawPixel(x - 1 * s, y + 3 * s + yOffset, '#BCAAA4');
+        this.drawPixel(x, y + 3 * s + yOffset, '#BCAAA4');
+        this.drawPixel(x + 1 * s, y + 3 * s + yOffset, '#BCAAA4');
+        this.drawPixel(x + 2 * s, y + 3 * s + yOffset, '#A1887F');
+        this.drawPixel(x + 3 * s, y + 3 * s + yOffset, '#A1887F');
+        this.drawPixel(x + 4 * s, y + 3 * s + yOffset, '#8D6E63');
 
-        // Mid hull (widest part)
-        this.drawPixel(x - 2 * size, y, '#A0522D');
-        this.drawPixel(x - 1 * size, y, '#8B6914');
-        this.drawPixel(x, y, '#8B6914');
-        this.drawPixel(x + 1 * size, y, '#8B6914');
-        this.drawPixel(x + 2 * size, y, '#A0522D');
+        // Deck
+        this.drawPixel(x - 3 * s, y + 2 * s + yOffset, '#6D4C41');
+        this.drawPixel(x - 2 * s, y + 2 * s + yOffset, '#795548');
+        this.drawPixel(x - 1 * s, y + 2 * s + yOffset, '#795548');
+        this.drawPixel(x, y + 2 * s + yOffset, '#795548');
+        this.drawPixel(x + 1 * s, y + 2 * s + yOffset, '#795548');
+        this.drawPixel(x + 2 * s, y + 2 * s + yOffset, '#795548');
+        this.drawPixel(x + 3 * s, y + 2 * s + yOffset, '#6D4C41');
 
-        // Lower hull
-        this.drawPixel(x - 1 * size, y + 1 * size, '#A0522D');
-        this.drawPixel(x, y + 1 * size, '#A0522D');
-        this.drawPixel(x + 1 * size, y + 1 * size, '#A0522D');
+        // === MAST (simple brown wooden mast) ===
+        this.drawPixel(x, y + 1 * s + yOffset, '#5D4037');
+        this.drawPixel(x, y + yOffset, '#5D4037');
+        this.drawPixel(x, y - 1 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 2 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 3 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 4 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 5 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 6 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 7 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 8 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 9 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 10 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 11 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 12 * s + yOffset, '#6D4C41');
+        this.drawPixel(x, y - 13 * s + yOffset, '#6D4C41');
 
-        // Stern (back - flat)
-        this.drawPixel(x - 1 * size, y + 2 * size, '#8B4513');
-        this.drawPixel(x, y + 2 * size, '#8B4513');
-        this.drawPixel(x + 1 * size, y + 2 * size, '#8B4513');
+        // === MAINSAIL (large white triangular sail) ===
+        // Row by row from top
+        this.drawPixel(x, y - 13 * s + yOffset, '#FFFFFF');
 
-        // Sail from top (white triangular shape)
-        const sailSway = Math.sin(this.time * 2) * 0.3;
+        this.drawPixel(x, y - 12 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 12 * s + yOffset, '#F5F5F5');
 
-        // Main sail (to the right side)
-        this.drawPixel(x + 1 * size, y - 1 * size, '#FFFFFF');
-        this.drawPixel(x + 2 * size, y - 1 * size, '#F5F5F5');
-        this.drawPixel(x + 3 * size + sailSway, y - 1 * size, '#FFFFFF');
-        this.drawPixel(x + 1 * size, y, '#F8F8F8');
-        this.drawPixel(x + 2 * size, y, '#FFFFFF');
-        this.drawPixel(x + 3 * size + sailSway, y, '#F5F5F5');
-        this.drawPixel(x + 4 * size + sailSway, y, '#FFFFFF');
-        this.drawPixel(x + 2 * size, y + 1 * size, '#F5F5F5');
-        this.drawPixel(x + 3 * size + sailSway, y + 1 * size, '#FFFFFF');
+        this.drawPixel(x, y - 11 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 11 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 11 * s + yOffset, '#F5F5F5');
 
-        // Mast center line (dark)
-        this.drawPixel(x, y, '#654321');
-        this.drawPixel(x, y - 1 * size, '#654321');
+        this.drawPixel(x, y - 10 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 10 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 10 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 10 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 9 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 9 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 9 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 9 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 4 * s, y - 9 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 8 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 8 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 8 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 8 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 4 * s, y - 8 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 5 * s, y - 8 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 7 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 7 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 7 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 7 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 4 * s, y - 7 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 5 * s, y - 7 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 6 * s, y - 7 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 6 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 6 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 6 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 6 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 4 * s, y - 6 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 5 * s, y - 6 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 6 * s, y - 6 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 7 * s, y - 6 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 5 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 5 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 5 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 5 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 4 * s, y - 5 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 5 * s, y - 5 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 6 * s, y - 5 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 4 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 4 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 4 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 4 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 4 * s, y - 4 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 5 * s, y - 4 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 3 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 3 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 3 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 3 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 4 * s, y - 3 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 2 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 2 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 2 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 3 * s, y - 2 * s + yOffset, '#F5F5F5');
+
+        this.drawPixel(x, y - 1 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 1 * s, y - 1 * s + yOffset, '#FFFFFF');
+        this.drawPixel(x + 2 * s, y - 1 * s + yOffset, '#F5F5F5');
+
+        // === FLAG at top of mast ===
+        const flagWave = Math.sin(this.time * 4) * 0.3;
+        this.drawPixel(x + 1 * s, y - 14 * s + yOffset + flagWave, '#E53935');
+        this.drawPixel(x + 2 * s, y - 14 * s + yOffset + flagWave, '#D32F2F');
     }
 
     adjustBrightness(color, amount) {
@@ -511,6 +645,15 @@ class PixelOcean {
                 });
             }
 
+            // Boat speed control
+            const boatSpeedSlider = document.getElementById('boat-speed');
+            if (boatSpeedSlider) {
+                boatSpeedSlider.addEventListener('input', (e) => {
+                    this.boatSpeedMultiplier = parseFloat(e.target.value);
+                    e.target.nextElementSibling.textContent = `${this.boatSpeedMultiplier.toFixed(1)}x`;
+                });
+            }
+
             // Pixel size control
             const pixelSizeSlider = document.getElementById('pixel-size');
             if (pixelSizeSlider) {
@@ -539,7 +682,7 @@ class PixelOcean {
     }
 
     animate() {
-        this.time += 0.016 * this.waveSpeedMultiplier; // Apply wave speed multiplier
+        this.time += 0.008 * this.waveSpeedMultiplier; // Slower base animation (was 0.016)
 
         // Clear canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -554,6 +697,7 @@ class PixelOcean {
 
         // Update moving features
         this.updateFeatures();
+        this.updateBoatPosition();
 
         // Draw features in layers (bottom to top)
         // Islands first (on ocean floor/surface)

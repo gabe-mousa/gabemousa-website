@@ -12,7 +12,6 @@ body {
     line-height: 1.6;
     font-weight: 300;
     overflow-x: hidden;
-    cursor: none; /* Hide default cursor since sailboat follows it */
 }
 
 html {
@@ -31,7 +30,6 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer; /* Show cursor on nav */
 }
 
 .nav-name {
@@ -77,7 +75,6 @@ section {
     box-shadow: 0 10px 50px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(20px);
     border: 2px solid rgba(255, 255, 255, 0.5);
-    cursor: auto; /* Show cursor over content */
 }
 
 h1 {
@@ -154,7 +151,7 @@ p {
     color: white;
     border: none;
     border-radius: 25px;
-    cursor: pointer !important;
+    cursor: pointer;
     font-size: 1rem;
     text-transform: lowercase;
     transition: all 0.3s ease;
@@ -186,7 +183,7 @@ li {
     border-radius: 25px;
     transition: all 0.3s ease;
     font-weight: 300;
-    cursor: pointer !important;
+    cursor: pointer;
 }
 
 .resume-link:hover {
@@ -219,7 +216,7 @@ li {
 
 /* Ensure interactive elements show cursor */
 button, a, input, textarea, select {
-    cursor: pointer !important;
+    cursor: pointer;
 }
 
 /* Canvas for pixel ocean */
@@ -239,8 +236,10 @@ canvas {
     border: 2px solid #C2B280;
     z-index: 9999;
     min-width: 180px;
+    max-height: calc(100vh - 100px);
     backdrop-filter: blur(10px);
-    cursor: auto !important;
+    display: flex;
+    flex-direction: column;
 }
 
 .island-header {
@@ -251,12 +250,13 @@ canvas {
     text-align: center;
     padding: 0.4rem;
     border-bottom: 2px solid #C2B280;
-    cursor: pointer !important;
+    cursor: pointer;
     user-select: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
 .island-header:hover {
@@ -295,15 +295,36 @@ canvas {
 }
 
 .controls-content {
-    max-height: 1000px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     transition: max-height 0.4s ease, opacity 0.3s ease;
     opacity: 1;
+    flex: 1;
+    min-height: 0;
+}
+
+.controls-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.controls-content::-webkit-scrollbar-track {
+    background: rgba(194, 178, 128, 0.3);
+    border-radius: 3px;
+}
+
+.controls-content::-webkit-scrollbar-thumb {
+    background: #3D6B40;
+    border-radius: 3px;
+}
+
+.controls-content::-webkit-scrollbar-thumb:hover {
+    background: #2F5233;
 }
 
 .ocean-island-controls.collapsed .controls-content {
     max-height: 0;
     opacity: 0;
+    overflow: hidden;
 }
 
 .control-group {
@@ -325,7 +346,7 @@ canvas {
     background: rgba(194, 178, 128, 0.5);
     outline: none;
     -webkit-appearance: none;
-    cursor: pointer !important;
+    cursor: pointer;
 }
 
 .control-group input[type="range"]::-webkit-slider-thumb {
@@ -335,7 +356,7 @@ canvas {
     height: 14px;
     border-radius: 50%;
     background: #3D6B40;
-    cursor: pointer !important;
+    cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -344,7 +365,7 @@ canvas {
     height: 14px;
     border-radius: 50%;
     background: #3D6B40;
-    cursor: pointer !important;
+    cursor: pointer;
     border: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -366,7 +387,7 @@ canvas {
     border-radius: 10px;
     font-size: 0.8rem;
     font-weight: 400;
-    cursor: pointer !important;
+    cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 0.4rem;
 }
