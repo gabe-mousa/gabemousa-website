@@ -12,7 +12,7 @@
         <div class="nav-links">
             <a href="#home">home</a>
             <a href="#blog">blog</a>
-            <a href="#life">life</a>
+            <a href="#life">about me</a>
             <a href="#resume">resume</a>
             <a href="#ideas">ideas</a>
         </div>
@@ -64,67 +64,37 @@
 
     <section id="home">
         <div class="content">
-            <h1>hey there</h1>
+            <h1>hi, i'm gabe</h1>
             <p>welcome to my little corner of the internet</p>
+            <p>i'm a software engineer at microsoft studying ai safety in my freetime</p>
+            <p>if you want to contact me - gab.01@hotmail.com</p>
         </div>
     </section>
 
     <section id="blog">
         <div class="content">
             <h2>blog</h2>
-            <div class="blog-posts">
-                <article class="post">
-                    <h3>post title one</h3>
-                    <span class="date">january 2026</span>
-                    <p>this is a preview of your latest blog post...</p>
-                </article>
-                <article class="post">
-                    <h3>post title two</h3>
-                    <span class="date">december 2025</span>
-                    <p>another interesting post preview...</p>
-                </article>
-                <article class="post">
-                    <h3>post title three</h3>
-                    <span class="date">november 2025</span>
-                    <p>more thoughts and ideas...</p>
-                </article>
-                <article class="post">
-                    <h3>post title four</h3>
-                    <span class="date">october 2025</span>
-                    <p>sharing what i've been learning...</p>
-                </article>
-                <article class="post">
-                    <h3>post title five</h3>
-                    <span class="date">september 2025</span>
-                    <p>some reflections on...</p>
-                </article>
-                <div class="older-posts hidden">
-                    <article class="post">
-                        <h3>post title six</h3>
-                        <span class="date">august 2025</span>
-                        <p>older post content...</p>
-                    </article>
-                    <article class="post">
-                        <h3>post title seven</h3>
-                        <span class="date">july 2025</span>
-                        <p>another older post...</p>
-                    </article>
-                </div>
-                <button class="show-more" onclick="toggleOlderPosts()">show older posts ↓</button>
+            <div class="blog-posts" id="blog-posts-container">
+                <!-- Blog posts will be loaded dynamically -->
             </div>
         </div>
     </section>
 
     <section id="life">
         <div class="content">
-            <h2>life</h2>
-            <p>things i love and enjoy</p>
-            <ul>
-                <li>coffee in the morning</li>
-                <li>reading good books</li>
-                <li>discovering new music</li>
-                <li>learning new things</li>
-            </ul>
+            <h2>about me</h2>
+            <p>My name is Gabriel Mousa, I'm a full-time software engineer, and I have fun working on technical things.
+                Currently, my interests lie in ai safety with a particular focus on LLM evals, supervised-fine tuning, rlhf,
+                and any unique ways I can potentially improve upon the post-training process to make models safer for the world.
+                As a whole, I believe AI is inevitable and while there are incredible benefits resulting from it, safety needs
+                to be a core tenant for those building it in order for society to build competently. 
+            </p>
+            <br>
+            <p>Outside of work I'm an avid sailor, cook, swimmer, rock-climber, hiker, and traveller. I 
+                live at home with two wonderful cats and most important of all an even more wonderful partner
+                who supports me in all of my endless endeavors. I like to read and try my best to take every
+                moment as a learning opportunity, while leading with curiosity. 
+            </p>
         </div>
     </section>
 
@@ -132,7 +102,7 @@
         <div class="content">
             <h2>resume</h2>
             <p>want to know more about my work?</p>
-            <a href="resume.pdf" class="resume-link" download>download resume (pdf)</a>
+            <a href="./GabrielMousa_Resume.pdf" class="resume-link" download>download resume (pdf)</a>
         </div>
     </section>
 
@@ -151,5 +121,6 @@
 
     <script src="ocean.js"></script>
     <script src="script.js"></script>
+    <script src="blog.js"></script>
 </body>
 </html>
