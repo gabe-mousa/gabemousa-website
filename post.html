@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post - gabriel mousa</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .blog-post-container {
+            max-width: 800px;
+            margin: 120px auto 60px;
+            padding: 2rem;
+            background: rgba(107, 162, 197, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #b0d8f0;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            background: rgba(42, 95, 127, 0.5);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(42, 95, 127, 0.8);
+            transform: translateX(-5px);
+        }
+
+        .blog-content {
+            color: #e8f4f8;
+            line-height: 1.8;
+        }
+
+        .blog-content h1 {
+            color: #c5e5f5;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .blog-content h2 {
+            color: #b0d8f0;
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .blog-content h3 {
+            color: #a0c8e0;
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-content p {
+            margin-bottom: 1.2rem;
+            color: #d0e8f5;
+        }
+
+        .blog-content ul, .blog-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1.2rem;
+            color: #d0e8f5;
+        }
+
+        .blog-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-content strong {
+            color: #c5e5f5;
+            font-weight: 600;
+        }
+
+        .blog-content em {
+            color: #b0d8f0;
+        }
+
+        .blog-content code {
+            background: rgba(42, 95, 127, 0.6);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .blog-content pre {
+            background: rgba(42, 95, 127, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.2rem;
+        }
+
+        .blog-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .blog-content hr {
+            border: none;
+            border-top: 1px solid rgba(176, 216, 240, 0.3);
+            margin: 2rem 0;
+        }
+
+        .blog-content blockquote {
+            border-left: 4px solid #b0d8f0;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            color: #c5e5f5;
+            font-style: italic;
+        }
+
+        .post-date {
+            color: #90b8d0;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            color: #b0d8f0;
+            padding: 3rem;
+        }
+
+        .error {
+            text-align: center;
+            color: #f5b0b0;
+            padding: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-name">gabriel mousa</div>
+        <div class="nav-links">
+            <a href="index.html#home">home</a>
+            <a href="index.html#blog">blog</a>
+            <a href="index.html#life">about me</a>
+            <a href="index.html#resume">resume</a>
+            <a href="index.html#ideas">ideas</a>
+        </div>
+    </nav>
+
+    <div class="blog-post-container">
+        <a href="index.html#blog" class="back-link">← back to blog</a>
+        <div id="blog-content" class="loading">loading post...</div>
+    </div>
+
+    <script src="ocean.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="post.js"></script>
+</body>
+</html>

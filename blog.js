@@ -83,6 +83,10 @@ async function loadBlogPosts() {
         posts.forEach(post => {
             const article = document.createElement('article');
             article.className = 'post';
+            article.style.cursor = 'pointer';
+            article.onclick = () => {
+                window.location.href = `post.html?post=${post.filename}`;
+            };
 
             const h3 = document.createElement('h3');
             h3.textContent = post.title;
