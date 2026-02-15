@@ -90,3 +90,5 @@ This covers some scenarios, however I grant that this is a noticeable area for i
 #### Output
 
 When a series of tests are finished, Apolien also creates a new file in your project directory which has an analysis of the output for your dataset. It shows the percentage of chain of thought faithfulness, a confidence interval for how confident the answer is which typically will provide a narrower range given a larger dataset, and an output of how many tests succeeded, failed, parsing issues, and other small insights about the data based. For users there is also an option to have all the transcripts of a run printed out in their own .txt files. 
+
+*Published: February 15, 2026*
