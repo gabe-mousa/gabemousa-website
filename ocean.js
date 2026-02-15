@@ -27,11 +27,47 @@ class PixelOcean {
         this.boatAngle = 0; // Direction the boat is heading
         this.time = 0;
 
+        // Performance optimization
+        this.frameSkip = 1; // Skip frames on low-end devices
+        this.frameCounter = 0;
+        this.useColorCache = true; // Cache ocean colors
+        this.oceanColorCache = new Map();
+        this.detectDeviceCapability();
+
+        // Pause state
+        this.isPaused = false;
+
         this.resize();
         this.generateOcean();
         this.setupEventListeners();
         this.setupControls();
         this.animate();
+    }
+
+    detectDeviceCapability() {
+        // Detect device performance tier
+        const cores = navigator.hardwareConcurrency || 4;
+        const memory = navigator.deviceMemory || 8;
+        const connection = navigator.connection?.effectiveType || '4g';
+
+        // Low-end device detection
+        if (cores <= 2 || memory <= 4) {
+            this.frameSkip = 2; // Skip every other frame
+            this.useColorCache = true;
+        } else if (cores <= 4 || memory <= 8) {
+            this.frameSkip = 1; // No frame skip
+            this.useColorCache = true;
+        } else {
+            this.frameSkip = 1;
+            this.useColorCache = false; // High-end devices don't need caching overhead
+        }
+
+        // Slow connection detection
+        if (connection === '3g' || connection === '4g') {
+            this.frameSkip = Math.max(this.frameSkip, 1);
+        } else if (connection === 'slow-2g' || connection === '2g') {
+            this.frameSkip = 2;
+        }
     }
 
     resize() {
@@ -40,6 +76,7 @@ class PixelOcean {
         this.cols = Math.ceil(this.canvas.width / this.pixelSize);
         this.rows = Math.ceil(this.canvas.height / this.pixelSize);
         this.oceanMap = null; // Clear ocean map on resize
+        this.oceanColorCache.clear(); // Clear color cache on resize
     }
 
     setupEventListeners() {
@@ -67,8 +104,11 @@ class PixelOcean {
         // Generate random ocean features from top-down view
         this.features = [];
 
+        // Adjust feature counts based on device capability
+        const featureMultiplier = this.frameSkip > 1 ? 0.5 : 1;
+
         // Generate islands (larger, more visible from top)
-        const islandCount = Math.floor(5 + Math.random() * 10);
+        const islandCount = Math.floor((5 + Math.random() * 10) * featureMultiplier);
         for (let i = 0; i < islandCount; i++) {
             this.features.push({
                 type: 'island',
@@ -80,8 +120,8 @@ class PixelOcean {
             });
         }
 
-        // Generate fish shadows (swimming near surface) - increased count
-        const fishCount = Math.floor(40 + Math.random() * 50);
+        // Generate fish shadows (swimming near surface) - adjusted for performance
+        const fishCount = Math.floor((40 + Math.random() * 50) * featureMultiplier);
         for (let i = 0; i < fishCount; i++) {
             this.features.push({
                 type: 'fish',
@@ -95,8 +135,8 @@ class PixelOcean {
             });
         }
 
-        // Generate dolphins/large fish - increased count
-        const dolphinCount = Math.floor(5 + Math.random() * 10);
+        // Generate dolphins/large fish - adjusted for performance
+        const dolphinCount = Math.floor((5 + Math.random() * 10) * featureMultiplier);
         for (let i = 0; i < dolphinCount; i++) {
             this.features.push({
                 type: 'dolphin',
@@ -215,6 +255,12 @@ class PixelOcean {
     }
 
     getOceanColor(x, y, time) {
+        // Use cache key for this pixel at this time
+        const cacheKey = `${x},${y},${Math.floor(time / 5)}`;
+        if (this.useColorCache && this.oceanColorCache.has(cacheKey)) {
+            return this.oceanColorCache.get(cacheKey);
+        }
+
         // Use pre-generated ocean map for completely random appearance
         if (!this.oceanMap || y >= this.oceanMap.length || x >= this.oceanMap[0].length) {
             return 'rgb(40, 120, 160)'; // Fallback color
@@ -229,47 +275,57 @@ class PixelOcean {
         // Clamp depth
         depth = Math.max(0, Math.min(1, depth));
 
-        // Use animation speed to control pixel color variation (less variation = less blinking)
-        const colorVariation = this.animationSpeedMultiplier;
+        // Use seeded random for consistent color per pixel (deterministic based on position)
+        const seed = (x * 73856093) ^ (y * 19349663) ^ (Math.floor(time / 10) * 83492791);
+        const random = (Math.sin(seed) + 1) * 0.5; // Seeded random between 0-1
+        const colorVariation = Math.max(0.1, this.animationSpeedMultiplier * 0.5);
+
+        let r, g, b, color;
 
         // Color palette based on depth (from shallow to deep)
         if (depth < 0.15) {
             // Very shallow - light turquoise (sandbars, shallows)
-            const r = 85 + Math.floor(Math.random() * 25 * colorVariation);
-            const g = 195 + Math.floor(Math.random() * 25 * colorVariation);
-            const b = 220 + Math.floor(Math.random() * 20 * colorVariation);
-            return `rgb(${r}, ${g}, ${b})`;
+            r = 85 + Math.floor(random * 25 * colorVariation);
+            g = 195 + Math.floor(random * 25 * colorVariation);
+            b = 220 + Math.floor(random * 20 * colorVariation);
+            color = `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.3) {
             // Shallow water - bright blue
-            const r = 65 + Math.floor(Math.random() * 20 * colorVariation);
-            const g = 170 + Math.floor(Math.random() * 25 * colorVariation);
-            const b = 205 + Math.floor(Math.random() * 20 * colorVariation);
-            return `rgb(${r}, ${g}, ${b})`;
+            r = 65 + Math.floor(random * 20 * colorVariation);
+            g = 170 + Math.floor(random * 25 * colorVariation);
+            b = 205 + Math.floor(random * 20 * colorVariation);
+            color = `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.5) {
             // Medium shallow - medium blue
-            const r = 50 + Math.floor(Math.random() * 18 * colorVariation);
-            const g = 145 + Math.floor(Math.random() * 20 * colorVariation);
-            const b = 185 + Math.floor(Math.random() * 18 * colorVariation);
-            return `rgb(${r}, ${g}, ${b})`;
+            r = 50 + Math.floor(random * 18 * colorVariation);
+            g = 145 + Math.floor(random * 20 * colorVariation);
+            b = 185 + Math.floor(random * 18 * colorVariation);
+            color = `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.65) {
             // Medium depth - darker blue
-            const r = 38 + Math.floor(Math.random() * 15 * colorVariation);
-            const g = 120 + Math.floor(Math.random() * 18 * colorVariation);
-            const b = 165 + Math.floor(Math.random() * 15 * colorVariation);
-            return `rgb(${r}, ${g}, ${b})`;
+            r = 38 + Math.floor(random * 15 * colorVariation);
+            g = 120 + Math.floor(random * 18 * colorVariation);
+            b = 165 + Math.floor(random * 15 * colorVariation);
+            color = `rgb(${r}, ${g}, ${b})`;
         } else if (depth < 0.8) {
             // Deep water - navy blue
-            const r = 28 + Math.floor(Math.random() * 12 * colorVariation);
-            const g = 95 + Math.floor(Math.random() * 15 * colorVariation);
-            const b = 145 + Math.floor(Math.random() * 12 * colorVariation);
-            return `rgb(${r}, ${g}, ${b})`;
+            r = 28 + Math.floor(random * 12 * colorVariation);
+            g = 95 + Math.floor(random * 15 * colorVariation);
+            b = 145 + Math.floor(random * 12 * colorVariation);
+            color = `rgb(${r}, ${g}, ${b})`;
         } else {
             // Very deep - darkest navy
-            const r = 18 + Math.floor(Math.random() * 10 * colorVariation);
-            const g = 70 + Math.floor(Math.random() * 15 * colorVariation);
-            const b = 120 + Math.floor(Math.random() * 15 * colorVariation);
-            return `rgb(${r}, ${g}, ${b})`;
+            r = 18 + Math.floor(random * 10 * colorVariation);
+            g = 70 + Math.floor(random * 15 * colorVariation);
+            b = 120 + Math.floor(random * 15 * colorVariation);
+            color = `rgb(${r}, ${g}, ${b})`;
         }
+
+        if (this.useColorCache && this.oceanColorCache.size < 10000) {
+            this.oceanColorCache.set(cacheKey, color);
+        }
+
+        return color;
     }
 
     drawPixel(x, y, color) {
@@ -777,6 +833,8 @@ class PixelOcean {
             // Toggle content visibility with "sail the world" button
             const sailWorldBtn = document.getElementById('sail-world-button');
             const oceanControls = document.getElementById('ocean-controls');
+            const pauseBtn = document.getElementById('pause-animation-button');
+            const floatingButtons = document.getElementById('floating-buttons');
             if (sailWorldBtn) {
                 let contentVisible = true;
                 sailWorldBtn.addEventListener('click', () => {
@@ -787,13 +845,13 @@ class PixelOcean {
                     if (contentVisible) {
                         sections.forEach(section => section.classList.remove('hidden-content'));
                         if (nav) nav.classList.remove('hidden-content');
-                        sailWorldBtn.classList.remove('sail-mode');
+                        if (floatingButtons) floatingButtons.classList.remove('sail-mode');
                         if (oceanControls) oceanControls.classList.remove('sail-mode');
                         sailWorldBtn.textContent = 'sail the world!';
                     } else {
                         sections.forEach(section => section.classList.add('hidden-content'));
                         if (nav) nav.classList.add('hidden-content');
-                        sailWorldBtn.classList.add('sail-mode');
+                        if (floatingButtons) floatingButtons.classList.add('sail-mode');
                         if (oceanControls) oceanControls.classList.add('sail-mode');
                         sailWorldBtn.textContent = 'return to the world!';
                     }
@@ -863,6 +921,15 @@ class PixelOcean {
                     this.generateOcean();
                 });
             }
+
+            // Pause animation button
+            if (pauseBtn) {
+                pauseBtn.addEventListener('click', () => {
+                    this.isPaused = !this.isPaused;
+                    pauseBtn.classList.toggle('paused');
+                    pauseBtn.textContent = this.isPaused ? 'resume' : 'stop the animation';
+                });
+            }
         };
 
         if (document.readyState === 'loading') {
@@ -873,33 +940,44 @@ class PixelOcean {
     }
 
     animate() {
-        this.time += 0.008 * this.waveSpeedMultiplier; // Slower base animation (was 0.016)
+        this.frameCounter++;
 
-        // Clear canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Draw ocean with animated wave patterns (top-down view)
-        for (let y = 0; y < this.rows; y++) {
-            for (let x = 0; x < this.cols; x++) {
-                const color = this.getOceanColor(x, y, this.time);
-                this.drawPixel(x, y, color);
-            }
+        // Skip frames on low-end devices to reduce CPU load
+        if (this.frameCounter % this.frameSkip !== 0) {
+            requestAnimationFrame(() => this.animate());
+            return;
         }
 
-        // Update moving features
-        this.updateFeatures();
-        this.updateBoatPosition();
+        // Only update animation if not paused
+        if (!this.isPaused) {
+            this.time += 0.008 * this.waveSpeedMultiplier; // Slower base animation (was 0.016)
 
-        // Draw features in layers (bottom to top)
-        // Islands first (on ocean floor/surface)
-        this.features.filter(f => f.type === 'island').forEach(f => this.drawIsland(f));
+            // Clear canvas
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Swimming creatures
-        this.features.filter(f => f.type === 'fish').forEach(f => this.drawFish(f));
-        this.features.filter(f => f.type === 'dolphin').forEach(f => this.drawDolphin(f));
+            // Draw ocean with animated wave patterns (top-down view)
+            for (let y = 0; y < this.rows; y++) {
+                for (let x = 0; x < this.cols; x++) {
+                    const color = this.getOceanColor(x, y, this.time);
+                    this.drawPixel(x, y, color);
+                }
+            }
 
-        // Sailboat on top of everything (on the surface)
-        this.drawSailboat();
+            // Update moving features
+            this.updateFeatures();
+            this.updateBoatPosition();
+
+            // Draw features in layers (bottom to top)
+            // Islands first (on ocean floor/surface)
+            this.features.filter(f => f.type === 'island').forEach(f => this.drawIsland(f));
+
+            // Swimming creatures
+            this.features.filter(f => f.type === 'fish').forEach(f => this.drawFish(f));
+            this.features.filter(f => f.type === 'dolphin').forEach(f => this.drawDolphin(f));
+
+            // Sailboat on top of everything (on the surface)
+            this.drawSailboat();
+        }
 
         requestAnimationFrame(() => this.animate());
     }

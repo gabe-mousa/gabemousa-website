@@ -436,11 +436,18 @@ canvas {
     box-shadow: 0 3px 10px rgba(100, 180, 220, 0.3);
 }
 
-/* Sail the World Button */
-.sail-world-btn {
+/* Floating Action Buttons Container */
+.floating-buttons {
     position: fixed;
     top: 80px;
     right: 220px;
+    display: flex;
+    gap: 10px;
+    z-index: 9999;
+    transition: top 0.4s ease, right 0.4s ease;
+}
+
+.floating-btn {
     background: rgba(230, 245, 255, 0.93);
     color: #2c5f8d;
     padding: 1rem 1.5rem;
@@ -449,19 +456,28 @@ canvas {
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
-    transition: top 0.4s ease, right 0.4s ease, background 0.3s ease, color 0.3s ease, transform 0.3s ease;
-    z-index: 9999;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     text-transform: lowercase;
     font-family: inherit;
+    white-space: nowrap;
 }
 
-.sail-world-btn:hover {
+.floating-btn:hover {
     background: rgba(200, 230, 255, 0.95);
     color: #1a3a52;
     transform: scale(1.05);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+}
+
+.floating-btn.paused {
+    background: rgba(100, 180, 220, 0.6);
+    color: white;
+}
+
+.floating-btn.paused:hover {
+    background: rgba(100, 180, 220, 0.8);
 }
 
 /* Content hiding for "sail the world" mode */
@@ -486,7 +502,7 @@ nav {
 }
 
 /* Sail the world mode - reposition buttons */
-.sail-world-btn.sail-mode {
+.floating-buttons.sail-mode {
     top: 20px;
     right: 220px;
 }
@@ -495,6 +511,7 @@ nav {
     top: 20px;
     right: 20px;
 }
+
 
 @media (max-width: 768px) {
     nav {
@@ -541,16 +558,20 @@ nav {
         font-size: 0.85rem;
     }
 
-    .sail-world-btn {
+    .floating-buttons {
         top: 120px;
         right: 10px;
         left: 10px;
+        flex-direction: column;
+    }
+
+    .floating-btn {
         font-size: 0.85rem;
         padding: 0.8rem 1rem;
     }
 
     .ocean-island-controls {
-        top: 180px;
+        top: 230px;
     }
 }
 
