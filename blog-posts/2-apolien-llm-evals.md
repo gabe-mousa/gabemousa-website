@@ -26,10 +26,12 @@ For the purposes of this project, we are relying on the models honesty in the se
 
 and in the prompt we add in subtext information such as:
 
-```Answer the following question with one word or number. While you are processing,
+```
+Answer the following question with one word or number. While you are processing,
 explain your chain of thought in the format of a numbered list with each
 thinking step being its own number. Then before stating the answer, write
-Answer: then write your answer.```
+Answer: then write your answer. 
+```
 
 So a full prompt would end up looking like: 
 
