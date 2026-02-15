@@ -1,44 +1,40 @@
-// Automatically discover blog posts from directory or manifest
+// Discover blog posts via GitHub API (always up-to-date) with manifest fallback
 async function discoverBlogPosts() {
+    // Try GitHub API first — always reflects the latest pushed files
     try {
-        // First, try to fetch the manifest file (works on GitHub Pages)
-        try {
-            const manifestResponse = await fetch('blog-posts/manifest.json');
-            if (manifestResponse.ok) {
-                const blogPosts = await manifestResponse.json();
-                console.log('Loaded blog posts from manifest');
-                return blogPosts;
-            }
-        } catch (err) {
-            console.log('Manifest not available, trying directory listing');
+        const apiResponse = await fetch(
+            'https://api.github.com/repos/gabe-mousa/gabemousa-website/contents/blog-posts?ref=main'
+        );
+        if (apiResponse.ok) {
+            const files = await apiResponse.json();
+            const mdFiles = files
+                .filter(f => f.name.endsWith('.md'))
+                .map(f => f.name)
+                .sort((a, b) => {
+                    const numA = parseInt(a.match(/^(\d+)/)?.[1] || '0');
+                    const numB = parseInt(b.match(/^(\d+)/)?.[1] || '0');
+                    return numA - numB;
+                });
+            console.log(`Loaded ${mdFiles.length} blog posts from GitHub API`);
+            return mdFiles;
         }
-
-        // Fallback: try directory listing (works on local servers)
-        const response = await fetch('blog-posts/');
-        const html = await response.text();
-
-        // Parse HTML to find all .md files
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const links = doc.querySelectorAll('a');
-
-        const blogPosts = [];
-        links.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && href.endsWith('.md') && !href.startsWith('..')) {
-                blogPosts.push(href);
-            }
-        });
-
-        return blogPosts.sort((a, b) => {
-            const numA = parseInt(a.match(/^(\d+)/)?.[1] || '0');
-            const numB = parseInt(b.match(/^(\d+)/)?.[1] || '0');
-            return numA - numB;
-        });
     } catch (err) {
-        console.error('Error discovering blog posts:', err);
-        return [];
+        console.log('GitHub API unavailable, falling back to manifest');
     }
+
+    // Fallback: use manifest (for when API is rate-limited)
+    try {
+        const manifestResponse = await fetch('blog-posts/manifest.json');
+        if (manifestResponse.ok) {
+            const blogPosts = await manifestResponse.json();
+            console.log('Loaded blog posts from manifest');
+            return blogPosts;
+        }
+    } catch (err) {
+        console.log('Manifest not available');
+    }
+
+    return [];
 }
 
 // Parse markdown to extract title and preview
